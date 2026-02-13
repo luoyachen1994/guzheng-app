@@ -3,7 +3,7 @@ App({
     userInfo: null,
     isLoggedIn: false,
     // API 基础配置
-    apiBaseUrl: 'http://YOUR_SERVER_IP:8000',  // TODO: 替换为你的阿里云服务器IP
+    apiBaseUrl: 'http://47.96.88.249:8000',
     // 练习统计
     todayPracticeMinutes: 0,
     totalPracticeDays: 0,
