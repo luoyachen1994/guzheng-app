@@ -1,0 +1,305 @@
+/* pages/practice/practice.wxss */
+
+/* 模式切换 */
+.mode-tabs {
+  display: flex;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-round);
+  padding: 6rpx;
+  margin-bottom: 24rpx;
+  box-shadow: var(--shadow-sm);
+}
+
+.mode-tab {
+  flex: 1;
+  text-align: center;
+  padding: 16rpx 0;
+  font-size: 26rpx;
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-round);
+  transition: all 0.3s;
+}
+
+.mode-tab.active {
+  background: var(--color-primary);
+  color: #FFFFFF;
+  font-weight: 500;
+}
+
+/* 曲目选择 */
+.song-selector {
+  padding: 24rpx 32rpx;
+}
+
+.song-label {
+  font-size: 22rpx;
+  color: var(--color-text-secondary);
+}
+
+.song-name {
+  font-size: 30rpx;
+  font-weight: 500;
+  margin-top: 4rpx;
+}
+
+.arrow {
+  font-size: 40rpx;
+  color: var(--color-text-light);
+}
+
+/* 摄像头预览 */
+.preview-area {
+  position: relative;
+  width: 100%;
+  height: 560rpx;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 24rpx;
+  background: #000;
+}
+
+.camera-view {
+  width: 100%;
+  height: 100%;
+}
+
+.camera-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #F5F5F5;
+}
+
+.placeholder-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+}
+
+.placeholder-text {
+  font-size: 28rpx;
+  color: var(--color-text-secondary);
+  margin-bottom: 24rpx;
+}
+
+.camera-flip {
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
+  width: 64rpx;
+  height: 64rpx;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32rpx;
+}
+
+/* 手部关键点叠加 */
+.hand-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hand-point {
+  position: absolute;
+  width: 12rpx;
+  height: 12rpx;
+  background: #52C41A;
+  border-radius: 50%;
+  border: 2rpx solid #FFFFFF;
+  transform: translate(-50%, -50%);
+}
+
+/* 录制计时 */
+.recording-timer {
+  position: absolute;
+  top: 20rpx;
+  left: 20rpx;
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 8rpx 20rpx;
+  border-radius: var(--radius-round);
+}
+
+.recording-dot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background: #FF4D4F;
+  margin-right: 12rpx;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.timer-text {
+  color: #FFFFFF;
+  font-size: 28rpx;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 纯音频模式 */
+.audio-visual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40rpx 0;
+}
+
+.waveform-container {
+  width: 100%;
+  height: 400rpx;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.waveform-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.wave-icon {
+  font-size: 80rpx;
+  margin-bottom: 16rpx;
+}
+
+.wave-text {
+  font-size: 28rpx;
+  color: var(--color-text-secondary);
+}
+
+.waveform-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.audio-timer {
+  display: flex;
+  align-items: center;
+  margin-top: 32rpx;
+}
+
+.recording-dot-lg {
+  width: 24rpx;
+  height: 24rpx;
+  border-radius: 50%;
+  background: #FF4D4F;
+  margin-right: 16rpx;
+  animation: blink 1s infinite;
+}
+
+.timer-text-lg {
+  font-size: 48rpx;
+  font-weight: 600;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 提示区 */
+.tip-card {
+  background: linear-gradient(135deg, #FFF8F0, #FFFFFF);
+  border-left: 6rpx solid var(--color-primary);
+}
+
+.tip-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: 12rpx;
+  display: block;
+}
+
+.tip-content {
+  font-size: 26rpx;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+/* 分析中 */
+.analyzing-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 248, 240, 0.95);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.analyzing-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.analyzing-spinner {
+  width: 80rpx;
+  height: 80rpx;
+  border: 6rpx solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 32rpx;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.analyzing-text {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: var(--color-text);
+  margin-bottom: 12rpx;
+}
+
+.analyzing-subtitle {
+  font-size: 26rpx;
+  color: var(--color-text-secondary);
+}
+
+/* 底部操作栏 */
+.action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24rpx 32rpx;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+  background: var(--color-bg);
+  display: flex;
+  gap: 24rpx;
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.05);
+}
+
+.record-btn {
+  flex: 1;
+}
+
+.stop-btn {
+  flex: 2;
+}
+
+.cancel-btn {
+  flex: 1;
+}

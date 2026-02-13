@@ -1,0 +1,91 @@
+<!--pages/report/report.wxml-->
+<view class="container safe-bottom">
+  <!-- 总体评分 -->
+  <view class="score-header">
+    <view class="score-circle">
+      <text class="total-score">{{report.totalScore || '--'}}</text>
+      <text class="score-max">/100</text>
+    </view>
+    <text class="score-level">{{report.level || '等待分析'}}</text>
+    <text class="score-date">{{report.date || ''}}</text>
+  </view>
+
+  <!-- 维度评分 -->
+  <view class="card dimension-card" wx:if="{{report.dimensions}}">
+    <text class="section-title">各维度评分</text>
+    <view class="dimension-list">
+      <view class="dimension-item" wx:for="{{report.dimensions}}" wx:key="name">
+        <view class="flex-between">
+          <text class="dim-name">{{item.name}}</text>
+          <text class="dim-score">{{item.score}}</text>
+        </view>
+        <view class="progress-bar">
+          <view
+            class="progress-fill {{item.score >= 80 ? 'good' : item.score >= 60 ? 'fair' : 'poor'}}"
+            style="width: {{item.score}}%;"
+          ></view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 手型分析（视频模式） -->
+  <view class="card" wx:if="{{report.handAnalysis}}">
+    <text class="section-title">手型分析</text>
+    <view class="analysis-section">
+      <view class="analysis-item" wx:for="{{report.handAnalysis.issues}}" wx:key="index">
+        <view class="issue-header">
+          <text class="issue-icon {{item.severity}}">{{item.severity === 'warning' ? '⚠️' : '💡'}}</text>
+          <text class="issue-title">{{item.title}}</text>
+        </view>
+        <text class="issue-desc">{{item.description}}</text>
+        <text class="issue-suggestion">建议：{{item.suggestion}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 音频分析 -->
+  <view class="card" wx:if="{{report.audioAnalysis}}">
+    <text class="section-title">音准与节奏</text>
+
+    <!-- 音准图表占位 -->
+    <view class="chart-placeholder">
+      <canvas canvas-id="reportPitchCanvas" class="report-chart"></canvas>
+    </view>
+
+    <view class="analysis-section">
+      <view class="analysis-item" wx:for="{{report.audioAnalysis.issues}}" wx:key="index">
+        <view class="issue-header">
+          <text class="issue-icon {{item.severity}}">{{item.severity === 'warning' ? '⚠️' : '💡'}}</text>
+          <text class="issue-title">{{item.title}}</text>
+        </view>
+        <text class="issue-desc">{{item.description}}</text>
+        <text class="issue-suggestion">建议：{{item.suggestion}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- AI 综合建议 -->
+  <view class="card advice-card" wx:if="{{report.advice}}">
+    <text class="section-title">AI 练习建议</text>
+    <view class="advice-list">
+      <view class="advice-item" wx:for="{{report.advice}}" wx:key="index">
+        <text class="advice-number">{{index + 1}}</text>
+        <text class="advice-text">{{item}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-buttons">
+    <button class="btn-secondary" bindtap="sharReport">分享报告</button>
+    <button class="btn-primary" bindtap="practiceAgain">再练一次</button>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{!report.totalScore}}">
+    <text class="empty-icon">📊</text>
+    <text class="empty-text">暂无练习报告</text>
+    <button class="btn-primary" style="margin-top: 32rpx;" bindtap="practiceAgain">开始练习</button>
+  </view>
+</view>

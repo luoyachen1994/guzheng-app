@@ -1,0 +1,62 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/practice/practice",
+    "pages/audio/audio",
+    "pages/report/report",
+    "pages/profile/profile"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#8B4513",
+    "navigationBarTitleText": "古筝学习助手",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#FFF8F0",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#8B4513",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "static/icons/home.png",
+        "selectedIconPath": "static/icons/home-active.png"
+      },
+      {
+        "pagePath": "pages/practice/practice",
+        "text": "练习",
+        "iconPath": "static/icons/practice.png",
+        "selectedIconPath": "static/icons/practice-active.png"
+      },
+      {
+        "pagePath": "pages/report/report",
+        "text": "报告",
+        "iconPath": "static/icons/report.png",
+        "selectedIconPath": "static/icons/report-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "static/icons/profile.png",
+        "selectedIconPath": "static/icons/profile-active.png"
+      }
+    ]
+  },
+  "permission": {
+    "scope.camera": {
+      "desc": "需要使用摄像头录制练习视频，用于手部动作识别"
+    },
+    "scope.record": {
+      "desc": "需要使用麦克风录制古筝演奏音频，用于音准分析"
+    }
+  },
+  "requiredPrivateInfos": [
+    "chooseVideo",
+    "chooseMedia"
+  ],
+  "sitemapLocation": "sitemap.json",
+  "style": "v2"
+}

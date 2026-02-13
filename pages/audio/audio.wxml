@@ -1,0 +1,87 @@
+<!--pages/audio/audio.wxml-->
+<view class="container safe-bottom">
+  <view class="section-title">音频分析工具</view>
+
+  <!-- 音频导入方式 -->
+  <view class="card">
+    <text class="tip-title">导入音频</text>
+    <text class="tip-content">除了实时录制，您也可以导入已有的练习音频进行分析</text>
+    <view class="import-actions">
+      <button class="btn-secondary" bindtap="importFromFile">从文件导入</button>
+      <button class="btn-secondary" bindtap="importFromRecent">最近录音</button>
+    </view>
+  </view>
+
+  <!-- 音频播放器 -->
+  <view class="card player-card" wx:if="{{audioLoaded}}">
+    <view class="player-header">
+      <text class="player-title">{{audioInfo.name}}</text>
+      <text class="player-duration">{{audioInfo.durationText}}</text>
+    </view>
+
+    <!-- 进度条 -->
+    <slider
+      class="progress-slider"
+      min="0"
+      max="{{audioInfo.duration}}"
+      value="{{currentPosition}}"
+      activeColor="#8B4513"
+      block-size="12"
+      bindchange="onSeek"
+    />
+
+    <!-- 播放控制 -->
+    <view class="player-controls">
+      <view class="control-btn" bindtap="rewind">
+        <text>⏪</text>
+      </view>
+      <view class="control-btn play-btn" bindtap="togglePlay">
+        <text>{{isPlaying ? '⏸' : '▶️'}}</text>
+      </view>
+      <view class="control-btn" bindtap="forward">
+        <text>⏩</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 分析结果预览 -->
+  <view class="card" wx:if="{{analysisResult}}">
+    <text class="section-title">分析结果</text>
+
+    <!-- 音准热力图 -->
+    <view class="pitch-map">
+      <canvas canvas-id="pitchCanvas" class="pitch-canvas"></canvas>
+    </view>
+
+    <!-- 关键指标 -->
+    <view class="metrics-row">
+      <view class="metric-item">
+        <text class="metric-value {{analysisResult.pitchAccuracy >= 80 ? 'good' : 'fair'}}">
+          {{analysisResult.pitchAccuracy}}%
+        </text>
+        <text class="metric-label">音准</text>
+      </view>
+      <view class="metric-item">
+        <text class="metric-value {{analysisResult.rhythmAccuracy >= 80 ? 'good' : 'fair'}}">
+          {{analysisResult.rhythmAccuracy}}%
+        </text>
+        <text class="metric-label">节奏</text>
+      </view>
+      <view class="metric-item">
+        <text class="metric-value {{analysisResult.dynamics >= 80 ? 'good' : 'fair'}}">
+          {{analysisResult.dynamics}}%
+        </text>
+        <text class="metric-label">力度</text>
+      </view>
+    </view>
+
+    <button class="btn-primary" bindtap="viewFullReport">查看完整报告</button>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{!audioLoaded && !analysisResult}}">
+    <text class="empty-icon">🎶</text>
+    <text class="empty-text">导入或录制音频开始分析</text>
+    <button class="btn-primary" style="margin-top: 32rpx;" bindtap="goToPractice">去录音</button>
+  </view>
+</view>

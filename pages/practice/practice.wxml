@@ -1,0 +1,129 @@
+<!--pages/practice/practice.wxml-->
+<view class="container safe-bottom">
+  <!-- 模式选择 -->
+  <view class="mode-tabs" wx:if="{{!isRecording && !isAnalyzing}}">
+    <view
+      class="mode-tab {{currentMode === 'video' ? 'active' : ''}}"
+      bindtap="switchMode"
+      data-mode="video"
+    >手型指导</view>
+    <view
+      class="mode-tab {{currentMode === 'audio' ? 'active' : ''}}"
+      bindtap="switchMode"
+      data-mode="audio"
+    >音准分析</view>
+    <view
+      class="mode-tab {{currentMode === 'combined' ? 'active' : ''}}"
+      bindtap="switchMode"
+      data-mode="combined"
+    >综合评测</view>
+  </view>
+
+  <!-- 曲目选择 -->
+  <view class="card song-selector" wx:if="{{!isRecording && !isAnalyzing}}" bindtap="selectSong">
+    <view class="flex-between">
+      <view class="flex-col">
+        <text class="song-label">当前曲目</text>
+        <text class="song-name">{{selectedSong.name || '自由练习（不指定曲目）'}}</text>
+      </view>
+      <text class="arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 视频预览区 -->
+  <view class="preview-area" wx:if="{{currentMode !== 'audio'}}">
+    <camera
+      wx:if="{{cameraReady}}"
+      device-position="{{cameraPosition}}"
+      flash="off"
+      bindinitdone="onCameraInit"
+      binderror="onCameraError"
+      class="camera-view"
+    >
+      <!-- 手部姿态叠加层 -->
+      <cover-view class="hand-overlay" wx:if="{{isRecording && handPoints.length > 0}}">
+        <cover-view
+          wx:for="{{handPoints}}"
+          wx:key="index"
+          class="hand-point"
+          style="left: {{item.x}}px; top: {{item.y}}px;"
+        ></cover-view>
+      </cover-view>
+
+      <!-- 录制计时 -->
+      <cover-view class="recording-timer" wx:if="{{isRecording}}">
+        <cover-view class="recording-dot"></cover-view>
+        <cover-view class="timer-text">{{formatTime}}</cover-view>
+      </cover-view>
+    </camera>
+
+    <!-- 摄像头未就绪 -->
+    <view class="camera-placeholder" wx:if="{{!cameraReady}}">
+      <text class="placeholder-icon">📷</text>
+      <text class="placeholder-text">请授权摄像头使用权限</text>
+      <button class="btn-secondary" bindtap="requestCameraAuth">授权开启</button>
+    </view>
+
+    <!-- 翻转摄像头 -->
+    <view class="camera-flip" bindtap="flipCamera" wx:if="{{cameraReady && !isRecording}}">
+      <text>🔄</text>
+    </view>
+  </view>
+
+  <!-- 纯音频模式展示 -->
+  <view class="audio-visual" wx:if="{{currentMode === 'audio'}}">
+    <view class="waveform-container">
+      <view class="waveform-placeholder" wx:if="{{!isRecording}}">
+        <text class="wave-icon">🎵</text>
+        <text class="wave-text">点击下方按钮开始录音</text>
+      </view>
+      <!-- 音频波形 -->
+      <canvas
+        wx:if="{{isRecording}}"
+        canvas-id="waveformCanvas"
+        class="waveform-canvas"
+      ></canvas>
+    </view>
+
+    <!-- 录制计时 -->
+    <view class="audio-timer" wx:if="{{isRecording}}">
+      <view class="recording-dot-lg"></view>
+      <text class="timer-text-lg">{{formatTime}}</text>
+    </view>
+  </view>
+
+  <!-- 提示信息 -->
+  <view class="tips-area" wx:if="{{!isRecording && !isAnalyzing}}">
+    <view class="card tip-card">
+      <text class="tip-title">练习提示</text>
+      <text class="tip-content" wx:if="{{currentMode === 'video'}}">请将手部放置在摄像头可见范围内，确保光线充足。AI将实时识别您的手型并给出指导。</text>
+      <text class="tip-content" wx:if="{{currentMode === 'audio'}}">请保持环境安静，将手机放置在古筝附近。AI将分析您的演奏音准和节奏。</text>
+      <text class="tip-content" wx:if="{{currentMode === 'combined'}}">综合模式将同时录制视频和音频，全方位分析您的练习表现。</text>
+    </view>
+  </view>
+
+  <!-- 分析中状态 -->
+  <view class="analyzing-overlay" wx:if="{{isAnalyzing}}">
+    <view class="analyzing-content">
+      <view class="analyzing-spinner"></view>
+      <text class="analyzing-text">AI正在分析您的练习...</text>
+      <text class="analyzing-subtitle">{{analyzeProgress}}</text>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="action-bar">
+    <block wx:if="{{!isRecording && !isAnalyzing}}">
+      <button class="btn-primary record-btn" bindtap="startRecording">
+        开始{{currentMode === 'audio' ? '录音' : '录制'}}
+      </button>
+    </block>
+
+    <block wx:if="{{isRecording}}">
+      <button class="btn-secondary cancel-btn" bindtap="cancelRecording">取消</button>
+      <button class="btn-primary stop-btn" bindtap="stopRecording">
+        完成{{currentMode === 'audio' ? '录音' : '录制'}}
+      </button>
+    </block>
+  </view>
+</view>

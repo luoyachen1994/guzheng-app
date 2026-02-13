@@ -1,0 +1,92 @@
+<!--pages/profile/profile.wxml-->
+<view class="container safe-bottom">
+  <!-- 用户信息 -->
+  <view class="profile-header">
+    <view class="avatar-wrapper">
+      <image
+        class="avatar"
+        src="{{userInfo.avatarUrl || '/static/images/default-avatar.png'}}"
+        mode="aspectFill"
+      ></image>
+    </view>
+    <text class="nickname">{{userInfo.nickName || '点击登录'}}</text>
+    <text class="user-level">{{levelText}}</text>
+    <button wx:if="{{!isLoggedIn}}" class="btn-primary login-btn" bindtap="handleLogin">
+      微信登录
+    </button>
+  </view>
+
+  <!-- 练习数据概览 -->
+  <view class="card stats-overview">
+    <view class="stats-grid">
+      <view class="overview-item" bindtap="goToHistory">
+        <text class="overview-num">{{stats.totalHours}}</text>
+        <text class="overview-label">总练习(小时)</text>
+      </view>
+      <view class="overview-item">
+        <text class="overview-num">{{stats.totalDays}}</text>
+        <text class="overview-label">练习天数</text>
+      </view>
+      <view class="overview-item">
+        <text class="overview-num">{{stats.avgScore}}</text>
+        <text class="overview-label">平均分</text>
+      </view>
+      <view class="overview-item">
+        <text class="overview-num">{{stats.bestScore}}</text>
+        <text class="overview-label">最高分</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 功能列表 -->
+  <view class="card menu-card">
+    <view class="menu-item" bindtap="goToHistory">
+      <text class="menu-icon">📋</text>
+      <text class="menu-text">练习记录</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-divider"></view>
+
+    <view class="menu-item" bindtap="goToProgress">
+      <text class="menu-icon">📈</text>
+      <text class="menu-text">进度统计</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-divider"></view>
+
+    <view class="menu-item" bindtap="goToCollection">
+      <text class="menu-icon">⭐</text>
+      <text class="menu-text">收藏曲目</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-divider"></view>
+
+    <view class="menu-item" bindtap="goToGoals">
+      <text class="menu-icon">🎯</text>
+      <text class="menu-text">练习目标</text>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+
+  <view class="card menu-card">
+    <view class="menu-item" bindtap="goToSettings">
+      <text class="menu-icon">⚙️</text>
+      <text class="menu-text">设置</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-divider"></view>
+
+    <view class="menu-item" bindtap="goToAbout">
+      <text class="menu-icon">ℹ️</text>
+      <text class="menu-text">关于</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-divider"></view>
+
+    <view class="menu-item" bindtap="goToFeedback">
+      <text class="menu-icon">💬</text>
+      <text class="menu-text">意见反馈</text>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+</view>

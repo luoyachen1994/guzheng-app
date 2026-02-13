@@ -1,0 +1,100 @@
+<!--pages/index/index.wxml-->
+<view class="container safe-bottom">
+  <!-- 顶部欢迎区 -->
+  <view class="header">
+    <view class="greeting">
+      <text class="greeting-text">{{greeting}}，</text>
+      <text class="user-name">{{userInfo.nickName || '筝友'}}</text>
+    </view>
+    <text class="greeting-subtitle">今天想练习什么？</text>
+  </view>
+
+  <!-- 今日练习统计 -->
+  <view class="card stats-card">
+    <view class="flex-between">
+      <view class="stat-item">
+        <text class="stat-number">{{todayMinutes}}</text>
+        <text class="stat-label">今日练习(分钟)</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-number">{{consecutiveDays}}</text>
+        <text class="stat-label">连续练习(天)</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-number">{{totalSessions}}</text>
+        <text class="stat-label">练习次数</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 功能入口 -->
+  <view class="section-title">开始练习</view>
+  <view class="feature-grid">
+    <!-- 视频练习 -->
+    <view class="feature-card" bindtap="goToPractice" data-mode="video">
+      <view class="feature-icon video-icon">
+        <text class="icon-text">🎥</text>
+      </view>
+      <text class="feature-title">手型指导</text>
+      <text class="feature-desc">录制视频，AI识别手部动作并给出纠正建议</text>
+    </view>
+
+    <!-- 音频练习 -->
+    <view class="feature-card" bindtap="goToPractice" data-mode="audio">
+      <view class="feature-icon audio-icon">
+        <text class="icon-text">🎵</text>
+      </view>
+      <text class="feature-title">音准分析</text>
+      <text class="feature-desc">录制演奏音频，AI分析音准节奏并给出评分</text>
+    </view>
+
+    <!-- 综合练习 -->
+    <view class="feature-card" bindtap="goToPractice" data-mode="combined">
+      <view class="feature-icon combined-icon">
+        <text class="icon-text">🎯</text>
+      </view>
+      <text class="feature-title">综合评测</text>
+      <text class="feature-desc">同时录制视频和音频，全方位分析练习表现</text>
+    </view>
+
+    <!-- 曲谱库 -->
+    <view class="feature-card" bindtap="goToLibrary">
+      <view class="feature-icon library-icon">
+        <text class="icon-text">📖</text>
+      </view>
+      <text class="feature-title">曲谱库</text>
+      <text class="feature-desc">浏览练习曲目，从入门到进阶</text>
+    </view>
+  </view>
+
+  <!-- 最近练习 -->
+  <view class="section-title" wx:if="{{recentSessions.length > 0}}">最近练习</view>
+  <view class="recent-list" wx:if="{{recentSessions.length > 0}}">
+    <view
+      class="card recent-item"
+      wx:for="{{recentSessions}}"
+      wx:key="id"
+      bindtap="goToReport"
+      data-id="{{item.id}}"
+    >
+      <view class="flex-between">
+        <view class="flex-col">
+          <text class="recent-title">{{item.songName || '自由练习'}}</text>
+          <text class="recent-meta">{{item.date}} · {{item.duration}}分钟</text>
+        </view>
+        <view class="score-badge {{item.scoreLevel}}">
+          <text class="score-text">{{item.score}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{recentSessions.length === 0}}">
+    <text class="empty-icon">🎵</text>
+    <text class="empty-text">还没有练习记录</text>
+    <text class="empty-hint">开始你的第一次练习吧</text>
+  </view>
+</view>
