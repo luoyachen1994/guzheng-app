@@ -53,10 +53,6 @@
       "desc": "需要使用麦克风录制古筝演奏音频，用于音准分析"
     }
   },
-  "requiredPrivateInfos": [
-    "chooseVideo",
-    "chooseMedia"
-  ],
   "sitemapLocation": "sitemap.json",
   "style": "v2"
 }

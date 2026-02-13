@@ -6,71 +6,99 @@ Page({
   },
 
   onLoad(options) {
+    if (options.source === 'analysis') {
+      // 从练习页跳转，读取全局分析结果
+      const app = getApp();
+      const result = app.globalData.lastAnalysisResult;
+      if (result) {
+        this.setData({ report: this.formatAnalysisResult(result) });
+        app.globalData.lastAnalysisResult = null; // 用完清除
+        return;
+      }
+    }
     if (options.id) {
       this.setData({ reportId: options.id });
       this.loadReport(options.id);
     }
   },
 
-  // 加载报告数据
+  // 将后端返回的分析结果转换为报告页展示格式
+  formatAnalysisResult(data) {
+    const now = new Date();
+    const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+    // 评级
+    let level = '需加强';
+    if (data.overallScore >= 90) level = '优秀';
+    else if (data.overallScore >= 80) level = '良好';
+    else if (data.overallScore >= 60) level = '中等';
+
+    // 分离手型问题和音频问题
+    const handIssues = [];
+    const audioIssues = [];
+    (data.issues || []).forEach((issue) => {
+      const title = issue.title || '';
+      if (title.includes('手') || title.includes('指') || title.includes('检测率')) {
+        handIssues.push(issue);
+      } else {
+        audioIssues.push(issue);
+      }
+    });
+
+    // 生成建议
+    const advice = [];
+    if (data.pitchAccuracy < 80) {
+      advice.push('建议搭配调音器进行逐音练习，注意左手按弦力度的控制。');
+    }
+    if (data.rhythmAccuracy < 80) {
+      advice.push('建议使用节拍器从慢速开始练习，逐步提速，确保每个音符时值准确。');
+    }
+    if (data.dynamics < 70) {
+      advice.push('注意乐句的强弱变化，练习渐强渐弱的控制，增强音乐表现力。');
+    }
+    if (data.handScore < 70) {
+      advice.push('对着镜子慢速练习基本指法，注意手指自然弯曲，保持放松状态。');
+    }
+    if (advice.length === 0) {
+      advice.push('整体表现不错，继续保持！可以尝试更高难度的曲目挑战自己。');
+    }
+
+    return {
+      totalScore: data.overallScore || 0,
+      level: level,
+      date: dateStr,
+      dimensions: [
+        { name: '手型姿势', score: data.handScore || 0 },
+        { name: '音准', score: data.pitchAccuracy || 0 },
+        { name: '节奏', score: data.rhythmAccuracy || 0 },
+        { name: '力度控制', score: data.dynamics || 0 },
+      ],
+      handAnalysis: {
+        issues: handIssues,
+      },
+      audioAnalysis: {
+        issues: audioIssues,
+      },
+      advice: advice,
+    };
+  },
+
+  // 从后端加载历史报告
   loadReport(id) {
-    // TODO: 从后端加载真实报告
-    // 使用模拟数据展示框架
+    // 使用模拟数据作为兜底
     const mockReport = this.getMockReport();
     this.setData({ report: mockReport });
   },
 
-  // 模拟数据（后续替换为真实 API 调用）
   getMockReport() {
     return {
-      totalScore: 78,
-      level: '良好',
-      date: '2026-02-13 14:30',
-      dimensions: [
-        { name: '手型姿势', score: 72 },
-        { name: '音准', score: 85 },
-        { name: '节奏', score: 80 },
-        { name: '力度控制', score: 68 },
-        { name: '流畅度', score: 82 },
-      ],
-      handAnalysis: {
-        issues: [
-          {
-            severity: 'warning',
-            title: '右手大指角度偏大',
-            description: '录像分析显示您的右手大指（拇指）在托弦时角度偏大约15°，可能导致音色偏硬。',
-            suggestion: '练习时注意大指自然弯曲，指尖触弦，保持约45°角。可以对着镜子慢速练习基本指法。',
-          },
-          {
-            severity: 'info',
-            title: '左手按弦位置可优化',
-            description: '部分按音时左手位置略偏向琴码方向，影响按音的音准稳定性。',
-            suggestion: '左手按弦点应在琴码左侧约15cm处，注意用指肚按压，保持手腕放松。',
-          },
-        ],
-      },
-      audioAnalysis: {
-        issues: [
-          {
-            severity: 'warning',
-            title: '第3-5小节音准偏低',
-            description: '在第3至第5小节的按音段落中，音高整体偏低约20音分（cents），可能是按弦力度不足。',
-            suggestion: '加强左手按弦力度练习，按弦时手指要到位，可以借助调音器进行校准练习。',
-          },
-          {
-            severity: 'info',
-            title: '节奏整体稳定',
-            description: '节奏准确度较高，但在快速段落（第8-10小节）有轻微赶拍现象。',
-            suggestion: '快速段落建议先用慢速练习，搭配节拍器逐步加速，确保每个音符时值准确。',
-          },
-        ],
-      },
-      advice: [
-        '建议本周重点练习右手基本指法（托、勾、抹），每天15分钟，注意手型保持。',
-        '左手按音练习搭配调音器进行，每个按音保持3秒确认音准后再进行下一个。',
-        '快速段落用节拍器从60BPM开始，每次提速5BPM，直到达到目标速度。',
-        '每次练习前做5分钟手指拉伸热身，避免肌肉紧张影响手型。',
-      ],
+      totalScore: 0,
+      level: '等待分析',
+      date: '',
+      dimensions: [],
+      handAnalysis: { issues: [] },
+      audioAnalysis: { issues: [] },
+      advice: ['请先录制或上传一段练习视频进行分析。'],
     };
   },
 

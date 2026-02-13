@@ -226,17 +226,42 @@ Page({
 
   // 分析录制内容
   analyzeRecording() {
-    this.setData({ isAnalyzing: true, analyzeProgress: '正在上传文件...' });
+    this.setData({ isAnalyzing: true, analyzeProgress: '正在上传视频...' });
 
     const { currentMode } = this.data;
-    const analysisData = {
-      mode: currentMode,
-      songId: this.data.selectedSong.id || null,
-      duration: this.data.recordingSeconds,
-    };
 
-    // 模拟分析流程（后续接入真实 API）
-    this.simulateAnalysis(analysisData);
+    // 视频模式或综合模式：上传视频到后端分析
+    if ((currentMode === 'video' || currentMode === 'combined') && this._videoFilePath) {
+      this.setData({ analyzeProgress: '正在压缩视频...' });
+      videoService.compressVideo(this._videoFilePath).then((compressedPath) => {
+        this.setData({ analyzeProgress: '正在上传视频...' });
+        return videoService.analyzeVideo(compressedPath, {
+          songId: this.data.selectedSong.id || '',
+        });
+      }).then((result) => {
+        this.setData({ isAnalyzing: false });
+        if (result && result.success) {
+          // 将分析结果通过全局变量传递给报告页
+          const app = getApp();
+          app.globalData.lastAnalysisResult = result.data;
+          wx.navigateTo({
+            url: `/pages/report/report?source=analysis`,
+          });
+        } else {
+          wx.showToast({ title: result.error || '分析失败', icon: 'none' });
+          this.resetRecordingState();
+        }
+      }).catch((err) => {
+        console.error('分析失败', err);
+        this.setData({ isAnalyzing: false });
+        wx.showToast({ title: '分析失败，请重试', icon: 'none' });
+        this.resetRecordingState();
+      });
+      return;
+    }
+
+    // 纯音频模式：暂时使用模拟数据
+    this.simulateAnalysis({});
   },
 
   // 模拟 AI 分析流程（框架占位，后续替换为真实调用）

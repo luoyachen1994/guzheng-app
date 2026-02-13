@@ -20,11 +20,9 @@ async function analyzeVideo(filePath, options = {}) {
     const uploadRes = await wxPromise(wx.uploadFile, {
       url: uploadUrl,
       filePath: filePath,
-      name: 'video',
+      name: 'file',
       formData: {
         songId: options.songId || '',
-        duration: options.duration || 0,
-        cameraPosition: options.cameraPosition || 'front',
       },
     });
 
