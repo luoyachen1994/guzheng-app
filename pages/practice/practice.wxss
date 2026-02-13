@@ -296,6 +296,10 @@
   flex: 1;
 }
 
+.upload-btn {
+  flex: 1;
+}
+
 .stop-btn {
   flex: 2;
 }

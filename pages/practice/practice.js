@@ -224,14 +224,35 @@ Page({
     this.resetRecordingState();
   },
 
+  // 从相册选择视频
+  chooseVideo() {
+    wx.chooseMedia({
+      count: 1,
+      mediaType: ['video'],
+      sourceType: ['album'],
+      maxDuration: 300,
+      success: (res) => {
+        const file = res.tempFiles[0];
+        this._videoFilePath = file.tempFilePath;
+        this._videoDuration = Math.floor(file.duration);
+        this.analyzeRecording();
+      },
+      fail: (err) => {
+        if (err.errMsg && err.errMsg.indexOf('cancel') === -1) {
+          wx.showToast({ title: '选择视频失败', icon: 'none' });
+        }
+      },
+    });
+  },
+
   // 分析录制内容
   analyzeRecording() {
     this.setData({ isAnalyzing: true, analyzeProgress: '正在上传视频...' });
 
     const { currentMode } = this.data;
 
-    // 视频模式或综合模式：上传视频到后端分析
-    if ((currentMode === 'video' || currentMode === 'combined') && this._videoFilePath) {
+    // 有视频文件就上传到后端分析
+    if (this._videoFilePath) {
       this.setData({ analyzeProgress: '正在压缩视频...' });
       videoService.compressVideo(this._videoFilePath).then((compressedPath) => {
         this.setData({ analyzeProgress: '正在上传视频...' });

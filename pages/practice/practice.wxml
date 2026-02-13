@@ -114,6 +114,9 @@
   <!-- 底部操作栏 -->
   <view class="action-bar">
     <block wx:if="{{!isRecording && !isAnalyzing}}">
+      <button class="btn-secondary upload-btn" bindtap="chooseVideo">
+        上传视频
+      </button>
       <button class="btn-primary record-btn" bindtap="startRecording">
         开始{{currentMode === 'audio' ? '录音' : '录制'}}
       </button>
