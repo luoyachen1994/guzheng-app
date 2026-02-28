@@ -319,23 +319,21 @@ Page({
 
   // ===== 音频播放 =====
   playBeat(isStrong) {
-    const { soundType } = this.data
-    const beatType = isStrong ? 'strong' : 'weak'
+    // 使用短震动代替音效（临时方案）
+    if (isStrong) {
+      // 强拍：稍长震动
+      wx.vibrateShort({ type: 'heavy' })
+    } else {
+      // 弱拍：短震动
+      wx.vibrateShort({ type: 'light' })
+    }
 
-    // 这里先用占位路径，后续需要添加实际音频文件
-    const src = `/assets/sounds/metronome/${soundType}/${beatType}.mp3`
-
-    // 注意：音频文件还未创建，实际播放会失败
-    // 可以先用系统提示音代替测试
-    this.audioCtx.src = src
-    this.audioCtx.play().catch(() => {
-      // 如果音频文件不存在，使用系统提示音代替
-      wx.showToast({
-        title: isStrong ? '强' : '弱',
-        icon: 'none',
-        duration: 100
-      })
-    })
+    // TODO: 后续添加真实音效文件后可以恢复音频播放
+    // const { soundType } = this.data
+    // const beatType = isStrong ? 'strong' : 'weak'
+    // const src = `/assets/sounds/metronome/${soundType}/${beatType}.mp3`
+    // this.audioCtx.src = src
+    // this.audioCtx.play()
   },
 
   // ===== 数据持久化 =====
