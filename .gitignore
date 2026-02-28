@@ -1,6 +1,31 @@
+# Python
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
+.Python
+
+# Environment
 .env
+.venv
+venv/
+ENV/
+
+# Node
 node_modules/
+
+# WeChat Mini Program
 project.private.config.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
