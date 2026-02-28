@@ -56,6 +56,75 @@
   background: rgba(255, 255, 255, 0.3);
 }
 
+/* 工具网格 */
+.tool-grid {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 40rpx;
+  overflow-x: auto;
+  padding-bottom: 10rpx;
+}
+
+.tool-card {
+  flex-shrink: 0;
+  width: 180rpx;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  padding: 30rpx 20rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16rpx;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s;
+}
+
+.tool-card:active {
+  transform: scale(0.95);
+  box-shadow: var(--shadow-xs);
+}
+
+.tool-card.disabled {
+  opacity: 0.5;
+  position: relative;
+}
+
+.tool-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
+}
+
+.metronome-icon {
+  background: linear-gradient(135deg, #4CAF50, #2e7d32);
+}
+
+.tuner-icon {
+  background: linear-gradient(135deg, #2196F3, #1565C0);
+}
+
+.score-icon {
+  background: linear-gradient(135deg, #FF9800, #F57C00);
+}
+
+.tool-title {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  text-align: center;
+}
+
+.coming-soon {
+  font-size: 20rpx;
+  color: var(--color-text-tertiary);
+  position: absolute;
+  bottom: 10rpx;
+}
+
 /* 功能网格 */
 .feature-grid {
   display: grid;

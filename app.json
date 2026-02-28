@@ -2,6 +2,7 @@
   "pages": [
     "pages/index/index",
     "pages/practice/practice",
+    "pages/metronome/metronome",
     "pages/audio/audio",
     "pages/report/report",
     "pages/profile/profile"
@@ -45,6 +46,7 @@
       }
     ]
   },
+  "requiredBackgroundModes": ["audio"],
   "permission": {
     "scope.camera": {
       "desc": "需要使用摄像头录制练习视频，用于手部动作识别"

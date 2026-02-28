@@ -1,0 +1,374 @@
+// pages/metronome/metronome.js
+
+// 节拍器核心类
+class Metronome {
+  constructor(options = {}) {
+    this.bpm = options.bpm || 96
+    this.isRunning = false
+    this.startTime = 0
+    this.beatCount = 0
+    this.timeSignature = options.timeSignature || [4, 4]
+    this.currentBeat = 0
+    this.onBeat = options.onBeat || (() => {})
+    this.timerId = null
+  }
+
+  start() {
+    if (this.isRunning) return
+    this.isRunning = true
+    this.startTime = Date.now()
+    this.beatCount = 0
+    this.currentBeat = 0
+    this.tick()
+  }
+
+  tick() {
+    if (!this.isRunning) return
+
+    // 计算下一拍的理论时间
+    this.beatCount++
+    const interval = 60000 / this.bpm
+    const expectedTime = this.startTime + this.beatCount * interval
+
+    // 计算当前拍
+    this.currentBeat = ((this.currentBeat) % this.timeSignature[0]) + 1
+
+    // 判断是否为强拍
+    const isStrong = this.isStrongBeat(this.currentBeat)
+
+    // 触发回调
+    this.onBeat(this.currentBeat, isStrong)
+
+    // 计算时间偏差并补偿
+    const actualTime = Date.now()
+    const drift = actualTime - expectedTime
+    const nextDelay = Math.max(0, interval - drift)
+
+    // 设置下一拍
+    this.timerId = setTimeout(() => this.tick(), nextDelay)
+  }
+
+  stop() {
+    this.isRunning = false
+    if (this.timerId) {
+      clearTimeout(this.timerId)
+      this.timerId = null
+    }
+    this.currentBeat = 0
+  }
+
+  setBPM(bpm) {
+    this.bpm = Math.max(30, Math.min(240, bpm))
+    if (this.isRunning) {
+      this.stop()
+      this.start()
+    }
+  }
+
+  setTimeSignature(beatsPerMeasure, noteValue) {
+    this.timeSignature = [beatsPerMeasure, noteValue]
+    this.currentBeat = 0
+  }
+
+  isStrongBeat(beatNumber) {
+    const [beatsPerMeasure] = this.timeSignature
+
+    // 第一拍总是强拍
+    if (beatNumber === 1) return true
+
+    // 6/8 和 9/8 拍的次强拍
+    if (beatsPerMeasure === 6 && beatNumber === 4) return true
+    if (beatsPerMeasure === 9 && (beatNumber === 4 || beatNumber === 7)) return true
+
+    return false
+  }
+}
+
+Page({
+  data: {
+    // 速度相关
+    bpm: 96,
+
+    // 预设相关
+    presetTab: 'music',
+    musicPresets: [
+      { term: 'Grave', name: '庄板', bpm: 40 },
+      { term: 'Largo', name: '广板', bpm: 50 },
+      { term: 'Adagio', name: '柔板', bpm: 60 },
+      { term: 'Andante', name: '行板', bpm: 76 },
+      { term: 'Moderato', name: '中板', bpm: 96 },
+      { term: 'Allegretto', name: '小快板', bpm: 112 },
+      { term: 'Allegro', name: '快板', bpm: 132 },
+      { term: 'Presto', name: '急板', bpm: 168 },
+    ],
+    practicePresets: [
+      { name: '初学', bpm: 60, desc: '初次接触' },
+      { name: '熟悉', bpm: 80, desc: '掌握指法' },
+      { name: '熟练', bpm: 100, desc: '完整演奏' },
+      { name: '演奏', bpm: 120, desc: '接近原速' },
+    ],
+
+    // 节拍类型
+    timeSignature: [4, 4],
+    timeSignatures: [
+      [2, 4],
+      [3, 4],
+      [4, 4],
+      [3, 8],
+      [6, 8],
+      [9, 8],
+    ],
+
+    // 音效类型
+    soundType: 'wooden', // wooden, guzheng, electronic
+
+    // 视觉模式
+    visualMode: 'blocks', // blocks, pendulum
+
+    // 方块状态
+    beatBlocks: [],
+
+    // 摆锤样式
+    pendulumStyle: '',
+
+    // 播放状态
+    isPlaying: false,
+  },
+
+  metronome: null,
+  audioCtx: null,
+
+  onLoad() {
+    // 初始化节拍器
+    this.metronome = new Metronome({
+      bpm: this.data.bpm,
+      timeSignature: this.data.timeSignature,
+      onBeat: (beatNumber, isStrong) => {
+        this.onMetronomeBeat(beatNumber, isStrong)
+      }
+    })
+
+    // 初始化音频上下文
+    this.audioCtx = wx.createInnerAudioContext()
+    this.audioCtx.obeyMuteSwitch = false
+
+    // 加载用户偏好
+    this.loadPreferences()
+
+    // 初始化视觉元素
+    this.initBeatBlocks()
+    this.updatePendulumStyle()
+  },
+
+  onShow() {
+    // 设置音频选项（后台播放）
+    wx.setInnerAudioOption({
+      obeyMuteSwitch: false,
+      speakerOn: true
+    })
+  },
+
+  onHide() {
+    // 页面隐藏时停止播放（可选：如果希望后台继续则注释掉）
+    // this.stopMetronome()
+  },
+
+  onUnload() {
+    // 清理资源
+    this.stopMetronome()
+    if (this.audioCtx) {
+      this.audioCtx.destroy()
+    }
+  },
+
+  // ===== 预设速度 =====
+  switchPresetTab(e) {
+    const tab = e.currentTarget.dataset.tab
+    this.setData({ presetTab: tab })
+  },
+
+  selectPreset(e) {
+    const bpm = parseInt(e.currentTarget.dataset.bpm)
+    this.setBPM(bpm)
+    wx.vibrateShort({ type: 'light' })
+
+    // 播放预览音
+    this.playBeat(true)
+  },
+
+  // ===== 速度控制 =====
+  adjustBPM(e) {
+    const value = parseInt(e.currentTarget.dataset.value)
+    const newBPM = Math.max(30, Math.min(240, this.data.bpm + value))
+    this.setBPM(newBPM)
+    wx.vibrateShort({ type: 'light' })
+
+    // 播放预览音
+    this.playBeat(true)
+  },
+
+  onSliderChange(e) {
+    const bpm = e.detail.value
+    this.setBPM(bpm)
+  },
+
+  onSliderChanging(e) {
+    // 实时更新显示，但不触发节拍器重启
+    this.setData({ bpm: e.detail.value })
+  },
+
+  setBPM(bpm) {
+    this.setData({ bpm })
+    this.metronome.setBPM(bpm)
+    this.updatePendulumStyle()
+    this.savePreferences()
+  },
+
+  // ===== 节拍类型 =====
+  selectTimeSignature(e) {
+    const index = e.currentTarget.dataset.index
+    const timeSignature = this.data.timeSignatures[index]
+    this.setData({ timeSignature })
+    this.metronome.setTimeSignature(timeSignature[0], timeSignature[1])
+    this.initBeatBlocks()
+    wx.vibrateShort({ type: 'light' })
+    this.savePreferences()
+  },
+
+  // ===== 音效切换 =====
+  toggleSoundType() {
+    const types = ['wooden', 'guzheng', 'electronic']
+    const currentIndex = types.indexOf(this.data.soundType)
+    const nextIndex = (currentIndex + 1) % types.length
+    const soundType = types[nextIndex]
+
+    this.setData({ soundType })
+
+    // 播放预览音
+    this.playBeat(true)
+
+    wx.vibrateShort({ type: 'light' })
+    this.savePreferences()
+  },
+
+  // ===== 视觉模式 =====
+  toggleVisualMode() {
+    const visualMode = this.data.visualMode === 'blocks' ? 'pendulum' : 'blocks'
+    this.setData({ visualMode })
+    wx.vibrateShort({ type: 'light' })
+    this.savePreferences()
+  },
+
+  initBeatBlocks() {
+    const count = this.data.timeSignature[0]
+    const blocks = Array.from({ length: count }, () => ({
+      active: false,
+      strong: false
+    }))
+    this.setData({ beatBlocks: blocks })
+  },
+
+  updateBeatBlocks(beatNumber, isStrong) {
+    const blocks = this.data.beatBlocks.map((block, index) => ({
+      active: index === beatNumber - 1,
+      strong: (index === beatNumber - 1) && isStrong
+    }))
+    this.setData({ beatBlocks: blocks })
+  },
+
+  updatePendulumStyle() {
+    const duration = (60 / this.data.bpm) * 2 // 完整摆动周期 = 2拍
+    this.setData({
+      pendulumStyle: `--swing-duration: ${duration}s`
+    })
+  },
+
+  // ===== 播放控制 =====
+  togglePlay() {
+    if (this.data.isPlaying) {
+      this.stopMetronome()
+    } else {
+      this.startMetronome()
+    }
+    wx.vibrateShort({ type: 'medium' })
+  },
+
+  startMetronome() {
+    this.setData({ isPlaying: true })
+    this.metronome.start()
+  },
+
+  stopMetronome() {
+    this.setData({ isPlaying: false })
+    this.metronome.stop()
+
+    // 重置视觉指示器
+    this.initBeatBlocks()
+  },
+
+  // ===== 节拍回调 =====
+  onMetronomeBeat(beatNumber, isStrong) {
+    // 播放音效
+    this.playBeat(isStrong)
+
+    // 更新视觉指示器
+    if (this.data.visualMode === 'blocks') {
+      this.updateBeatBlocks(beatNumber, isStrong)
+    }
+  },
+
+  // ===== 音频播放 =====
+  playBeat(isStrong) {
+    const { soundType } = this.data
+    const beatType = isStrong ? 'strong' : 'weak'
+
+    // 这里先用占位路径，后续需要添加实际音频文件
+    const src = `/assets/sounds/metronome/${soundType}/${beatType}.mp3`
+
+    // 注意：音频文件还未创建，实际播放会失败
+    // 可以先用系统提示音代替测试
+    this.audioCtx.src = src
+    this.audioCtx.play().catch(() => {
+      // 如果音频文件不存在，使用系统提示音代替
+      wx.showToast({
+        title: isStrong ? '强' : '弱',
+        icon: 'none',
+        duration: 100
+      })
+    })
+  },
+
+  // ===== 数据持久化 =====
+  loadPreferences() {
+    try {
+      const prefs = wx.getStorageSync('metronome_prefs')
+      if (prefs) {
+        this.setData({
+          bpm: prefs.bpm || 96,
+          timeSignature: prefs.timeSignature || [4, 4],
+          soundType: prefs.soundType || 'wooden',
+          visualMode: prefs.visualMode || 'blocks'
+        })
+        this.metronome.setBPM(this.data.bpm)
+        this.metronome.setTimeSignature(this.data.timeSignature[0], this.data.timeSignature[1])
+        this.initBeatBlocks()
+        this.updatePendulumStyle()
+      }
+    } catch (e) {
+      console.error('加载偏好设置失败', e)
+    }
+  },
+
+  savePreferences() {
+    try {
+      wx.setStorageSync('metronome_prefs', {
+        bpm: this.data.bpm,
+        timeSignature: this.data.timeSignature,
+        soundType: this.data.soundType,
+        visualMode: this.data.visualMode
+      })
+    } catch (e) {
+      console.error('保存偏好设置失败', e)
+    }
+  }
+})

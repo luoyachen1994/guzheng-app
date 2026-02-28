@@ -1,0 +1,121 @@
+<!--pages/metronome/metronome.wxml-->
+<view class="container">
+  <!-- 顶部栏 -->
+  <view class="header">
+    <view class="title">节拍器</view>
+    <view class="sound-switch" bindtap="toggleSoundType">
+      <text class="sound-text">{{soundType === 'wooden' ? '木' : soundType === 'guzheng' ? '筝' : '电'}}</text>
+    </view>
+  </view>
+
+  <!-- 预设速度区域 -->
+  <view class="presets-section">
+    <view class="preset-tabs">
+      <view class="tab {{presetTab === 'music' ? 'active' : ''}}" bindtap="switchPresetTab" data-tab="music">
+        音乐术语
+      </view>
+      <view class="tab {{presetTab === 'practice' ? 'active' : ''}}" bindtap="switchPresetTab" data-tab="practice">
+        练习场景
+      </view>
+    </view>
+
+    <scroll-view class="preset-buttons" scroll-x>
+      <block wx:if="{{presetTab === 'music'}}">
+        <view
+          class="preset-btn {{bpm === item.bpm ? 'active' : ''}}"
+          wx:for="{{musicPresets}}"
+          wx:key="term"
+          bindtap="selectPreset"
+          data-bpm="{{item.bpm}}">
+          <view class="preset-name">{{item.name}}</view>
+          <view class="preset-bpm">{{item.bpm}}</view>
+        </view>
+      </block>
+      <block wx:else>
+        <view
+          class="preset-btn {{bpm === item.bpm ? 'active' : ''}}"
+          wx:for="{{practicePresets}}"
+          wx:key="name"
+          bindtap="selectPreset"
+          data-bpm="{{item.bpm}}">
+          <view class="preset-name">{{item.name}}</view>
+          <view class="preset-bpm">{{item.bpm}}</view>
+        </view>
+      </block>
+    </scroll-view>
+  </view>
+
+  <!-- 速度显示区 -->
+  <view class="bpm-display">
+    <view class="bpm-number">{{bpm}}</view>
+    <view class="bpm-unit">BPM</view>
+  </view>
+
+  <!-- 微调按钮 -->
+  <view class="adjust-buttons">
+    <button class="adjust-btn" bindtap="adjustBPM" data-value="-5">-5</button>
+    <button class="adjust-btn" bindtap="adjustBPM" data-value="-1">-1</button>
+    <button class="adjust-btn" bindtap="adjustBPM" data-value="1">+1</button>
+    <button class="adjust-btn" bindtap="adjustBPM" data-value="5">+5</button>
+  </view>
+
+  <!-- 滑块 -->
+  <view class="slider-section">
+    <view class="slider-label">30</view>
+    <slider
+      class="bpm-slider"
+      min="30"
+      max="240"
+      step="1"
+      value="{{bpm}}"
+      activeColor="#4CAF50"
+      backgroundColor="#e0e0e0"
+      block-size="20"
+      bindchange="onSliderChange"
+      bindchanging="onSliderChanging" />
+    <view class="slider-label">240</view>
+  </view>
+
+  <!-- 节拍类型选择 -->
+  <view class="time-signature-section">
+    <view
+      class="time-sig-btn {{timeSignature[0] === item[0] && timeSignature[1] === item[1] ? 'active' : ''}}"
+      wx:for="{{timeSignatures}}"
+      wx:key="index"
+      bindtap="selectTimeSignature"
+      data-index="{{index}}">
+      {{item[0]}}/{{item[1]}}
+    </view>
+  </view>
+
+  <!-- 视觉指示器 -->
+  <view class="visual-indicator">
+    <view class="visual-switch" bindtap="toggleVisualMode">
+      <text class="visual-text">{{visualMode === 'blocks' ? '块' : '摆'}}</text>
+    </view>
+
+    <!-- 方块模式 -->
+    <view class="beat-blocks" wx:if="{{visualMode === 'blocks'}}">
+      <view
+        class="beat-block {{item.active ? 'active' : ''}} {{item.strong ? 'strong' : ''}}"
+        wx:for="{{beatBlocks}}"
+        wx:key="index">
+      </view>
+    </view>
+
+    <!-- 摆锤模式 -->
+    <view class="pendulum-container" wx:else>
+      <view class="pendulum" style="{{pendulumStyle}}">
+        <view class="pendulum-rod {{isPlaying ? 'swinging' : ''}}"></view>
+        <view class="pendulum-bob {{isPlaying ? 'swinging' : ''}}"></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 播放控制按钮 -->
+  <view class="play-control">
+    <button class="play-btn {{isPlaying ? 'playing' : ''}}" bindtap="togglePlay">
+      <text class="play-text">{{isPlaying ? '⏸' : '▶'}}</text>
+    </button>
+  </view>
+</view>

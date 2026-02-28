@@ -66,6 +66,13 @@ Page({
     });
   },
 
+  // 跳转到节拍器
+  goToMetronome() {
+    wx.navigateTo({
+      url: '/pages/metronome/metronome',
+    });
+  },
+
   // 跳转到曲谱库（后续开发）
   goToLibrary() {
     wx.showToast({

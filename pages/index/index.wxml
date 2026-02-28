@@ -30,6 +30,36 @@
   </view>
 
   <!-- 功能入口 -->
+  <view class="section-title">快捷工具</view>
+  <view class="tool-grid">
+    <!-- 节拍器 -->
+    <view class="tool-card" bindtap="goToMetronome">
+      <view class="tool-icon metronome-icon">
+        <text class="icon-text">📐</text>
+      </view>
+      <text class="tool-title">节拍器</text>
+    </view>
+
+    <!-- 调音器 (占位) -->
+    <view class="tool-card disabled">
+      <view class="tool-icon tuner-icon">
+        <text class="icon-text">🎼</text>
+      </view>
+      <text class="tool-title">调音器</text>
+      <text class="coming-soon">即将上线</text>
+    </view>
+
+    <!-- 曲谱 (占位) -->
+    <view class="tool-card disabled">
+      <view class="tool-icon score-icon">
+        <text class="icon-text">📖</text>
+      </view>
+      <text class="tool-title">动态曲谱</text>
+      <text class="coming-soon">即将上线</text>
+    </view>
+  </view>
+
+  <!-- 功能入口 -->
   <view class="section-title">开始练习</view>
   <view class="feature-grid">
     <!-- 视频练习 -->

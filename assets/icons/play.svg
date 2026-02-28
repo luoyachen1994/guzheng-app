@@ -1,0 +1,4 @@
+<!-- 占位SVG：播放图标 -->
+<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+  <polygon points="15,10 15,50 45,30" fill="white"/>
+</svg>

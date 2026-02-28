@@ -1,0 +1,371 @@
+/* pages/metronome/metronome.wxss */
+.container {
+  padding: 20rpx;
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+
+/* 顶部栏 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx;
+  background: white;
+  border-radius: 16rpx;
+  margin-bottom: 20rpx;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.sound-switch {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f0f0;
+  border-radius: 50%;
+}
+
+.sound-text {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #666;
+}
+
+/* 预设速度区域 */
+.presets-section {
+  background: white;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.preset-tabs {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 16rpx;
+  font-size: 28rpx;
+  color: #666;
+  border-radius: 8rpx;
+  transition: all 0.3s;
+}
+
+.tab.active {
+  background: #4CAF50;
+  color: white;
+  font-weight: bold;
+}
+
+.preset-buttons {
+  white-space: nowrap;
+  display: flex;
+  gap: 16rpx;
+}
+
+.preset-btn {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20rpx 30rpx;
+  background: #f5f5f5;
+  border-radius: 12rpx;
+  min-width: 140rpx;
+  transition: all 0.3s;
+}
+
+.preset-btn.active {
+  background: #4CAF50;
+  color: white;
+  transform: scale(1.05);
+}
+
+.preset-name {
+  font-size: 28rpx;
+  font-weight: bold;
+  margin-bottom: 8rpx;
+}
+
+.preset-bpm {
+  font-size: 24rpx;
+  opacity: 0.8;
+}
+
+/* 速度显示区 */
+.bpm-display {
+  background: white;
+  border-radius: 16rpx;
+  padding: 60rpx 40rpx;
+  margin-bottom: 20rpx;
+  text-align: center;
+}
+
+.bpm-number {
+  font-size: 140rpx;
+  font-weight: bold;
+  color: #4CAF50;
+  font-family: -apple-system-font, sans-serif;
+  line-height: 1;
+}
+
+.bpm-unit {
+  font-size: 32rpx;
+  color: #999;
+  margin-top: 10rpx;
+  letter-spacing: 4rpx;
+}
+
+/* 微调按钮 */
+.adjust-buttons {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 20rpx;
+  justify-content: center;
+}
+
+.adjust-btn {
+  width: 140rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  background: white;
+  color: #4CAF50;
+  border: 2rpx solid #4CAF50;
+  border-radius: 12rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  padding: 0;
+  transition: all 0.2s;
+}
+
+.adjust-btn::after {
+  border: none;
+}
+
+.adjust-btn:active {
+  transform: scale(0.95);
+  background: #4CAF50;
+  color: white;
+}
+
+/* 滑块区域 */
+.slider-section {
+  background: white;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.slider-label {
+  font-size: 28rpx;
+  color: #666;
+  width: 60rpx;
+  text-align: center;
+}
+
+.bpm-slider {
+  flex: 1;
+}
+
+/* 节拍类型选择 */
+.time-signature-section {
+  background: white;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+  display: flex;
+  gap: 16rpx;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.time-sig-btn {
+  padding: 20rpx 40rpx;
+  background: #f5f5f5;
+  border-radius: 12rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #666;
+  transition: all 0.3s;
+}
+
+.time-sig-btn.active {
+  background: #4CAF50;
+  color: white;
+  transform: scale(1.1);
+}
+
+/* 视觉指示器 */
+.visual-indicator {
+  background: white;
+  border-radius: 16rpx;
+  padding: 40rpx;
+  margin-bottom: 20rpx;
+  position: relative;
+  min-height: 400rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.visual-switch {
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
+  width: 50rpx;
+  height: 50rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f0f0;
+  border-radius: 50%;
+}
+
+.visual-text {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #666;
+}
+
+/* 方块模式 */
+.beat-blocks {
+  display: flex;
+  gap: 30rpx;
+  justify-content: center;
+  align-items: center;
+}
+
+.beat-block {
+  width: 80rpx;
+  height: 80rpx;
+  background: #e0e0e0;
+  border-radius: 12rpx;
+  transition: all 0.1s ease;
+}
+
+.beat-block.active {
+  background: #4CAF50;
+  transform: scale(1.3);
+}
+
+.beat-block.strong {
+  background: #f44336;
+  transform: scale(1.5);
+  box-shadow: 0 0 20rpx rgba(244, 67, 54, 0.5);
+}
+
+/* 摆锤模式 */
+.pendulum-container {
+  width: 100%;
+  height: 400rpx;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow: hidden;
+}
+
+.pendulum {
+  position: relative;
+  width: 200rpx;
+  height: 350rpx;
+}
+
+.pendulum-rod {
+  width: 6rpx;
+  height: 280rpx;
+  background: linear-gradient(to bottom, #666, #333);
+  position: absolute;
+  left: 50%;
+  top: 20rpx;
+  transform-origin: top center;
+  margin-left: -3rpx;
+  border-radius: 3rpx;
+}
+
+.pendulum-bob {
+  width: 60rpx;
+  height: 60rpx;
+  background: linear-gradient(135deg, #4CAF50, #2e7d32);
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  top: 280rpx;
+  transform-origin: top center;
+  margin-left: -30rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.3);
+}
+
+.pendulum-rod.swinging,
+.pendulum-bob.swinging {
+  animation: swing var(--swing-duration, 1s) linear infinite;
+}
+
+@keyframes swing {
+  0% { transform: translateX(-100rpx) rotate(-25deg); }
+  50% { transform: translateX(100rpx) rotate(25deg); }
+  100% { transform: translateX(-100rpx) rotate(-25deg); }
+}
+
+/* 播放控制 */
+.play-control {
+  display: flex;
+  justify-content: center;
+  padding: 40rpx;
+}
+
+.play-btn {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  background: #4CAF50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  padding: 0;
+  transition: all 0.3s;
+  box-shadow: 0 8rpx 24rpx rgba(76, 175, 80, 0.4);
+}
+
+.play-btn::after {
+  border: none;
+}
+
+.play-btn.playing {
+  background: #f44336;
+  box-shadow: 0 8rpx 24rpx rgba(244, 67, 54, 0.4);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.play-text {
+  font-size: 60rpx;
+  color: white;
+  line-height: 1;
+}
+
+.play-btn:active {
+  transform: scale(0.95);
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 8rpx 24rpx rgba(244, 67, 54, 0.4);
+  }
+  50% {
+    box-shadow: 0 8rpx 32rpx rgba(244, 67, 54, 0.7);
+  }
+}
