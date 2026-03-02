@@ -1,0 +1,122 @@
+<!--scorePackage/pages/score/score.wxml-->
+<view class="container">
+
+  <!-- 顶部信息栏 -->
+  <view class="header">
+    <view class="score-info">
+      <text class="score-title">{{score.title}}</text>
+      <text class="score-meta">{{score.key}}调 · {{score.bpm}}BPM · {{score.timeSignature[0]}}/{{score.timeSignature[1]}}</text>
+    </view>
+    <view class="header-controls">
+      <view class="ctrl-btn {{isLooping ? 'active' : ''}}" bindtap="toggleLoop">🔁</view>
+    </view>
+  </view>
+
+  <!-- 进度条 -->
+  <view class="progress-section">
+    <text class="time-label">{{currentTime > 0 ? formatTime : '0:00'}}</text>
+    <slider
+      class="progress-slider"
+      value="{{progress}}"
+      min="0" max="100" step="0.1"
+      activeColor="#8B4513"
+      backgroundColor="#e0e0e0"
+      block-size="16"
+      bindchange="onProgressChange"
+    />
+    <text class="time-label">{{duration > 0 ? durationText : '--:--'}}</text>
+  </view>
+
+  <!-- 播放控制 -->
+  <view class="playback-controls">
+    <view class="stop-btn" bindtap="stopPlay">⏹</view>
+    <view class="play-btn {{isPlaying ? 'playing' : ''}}" bindtap="togglePlay">
+      <text class="play-icon">{{isPlaying ? '⏸' : '▶'}}</text>
+    </view>
+    <view class="speed-selector">
+      <view
+        class="speed-btn {{speed === item ? 'active' : ''}}"
+        wx:for="{{speeds}}"
+        wx:key="*this"
+        bindtap="selectSpeed"
+        data-speed="{{item}}"
+      >{{item}}x</view>
+    </view>
+  </view>
+
+  <!-- 曲谱区域 -->
+  <scroll-view
+    class="score-scroll"
+    scroll-y
+    scroll-into-view="{{scrollIntoView}}"
+    scroll-with-animation
+  >
+    <view class="score-body">
+      <block wx:for="{{measures}}" wx:key="idx">
+
+        <!-- 段落标题 -->
+        <view class="section-label" wx:if="{{item.sectionStart}}">
+          {{item.sectionName}}
+        </view>
+
+        <!-- 小节行 -->
+        <view
+          class="measure-row {{currentMeasure === item.idx ? 'active' : ''}}"
+          id="measure-{{item.idx}}"
+          bindtap="seekToMeasure"
+          data-idx="{{item.idx}}"
+        >
+          <!-- 小节号 -->
+          <view class="measure-number">{{item.idx + 1}}</view>
+
+          <!-- 音符格 -->
+          <view class="notes-row">
+            <view
+              class="note-cell"
+              wx:for="{{item.notes}}"
+              wx:for-item="note"
+              wx:key="index"
+              style="flex: {{note.widthUnit}};"
+            >
+              <!-- 高八度点 -->
+              <view class="octave-dot top" wx:if="{{note.octave === 1}}">·</view>
+
+              <!-- 音符数字 -->
+              <view class="note-pitch {{note.pitch === '0' ? 'rest' : ''}}">
+                {{note.display}}
+                <text class="dot-mark" wx:if="{{note.isDot}}">·</text>
+              </view>
+
+              <!-- 低八度点 -->
+              <view class="octave-dot bottom" wx:if="{{note.octave === -1}}">·</view>
+
+              <!-- 时值线（八分音符下划线） -->
+              <view class="duration-beam" wx:if="{{note.duration <= 0.5}}"></view>
+
+              <!-- 指法 -->
+              <view class="finger-mark" wx:if="{{note.finger}}">{{note.finger}}</view>
+            </view>
+          </view>
+
+          <!-- 小节结束线 -->
+          <view class="bar-line"></view>
+        </view>
+
+      </block>
+
+      <!-- 结束双线 -->
+      <view class="final-bar">
+        <view class="final-bar-thin"></view>
+        <view class="final-bar-thick"></view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 无音频提示 -->
+  <view class="no-audio-tip" wx:if="{{!audioReady}}">
+    <text class="tip-icon">🎵</text>
+    <text class="tip-text">正在加载音频...</text>
+    <text class="tip-hint">如无音频文件，请将 MP3 放入\nscorePackage/audio/meihua_sannong.mp3</text>
+  </view>
+
+</view>

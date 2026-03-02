@@ -1,0 +1,307 @@
+/* scorePackage/pages/score/score.wxss */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #FFF8F0;
+  overflow: hidden;
+}
+
+/* 顶部信息栏 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16rpx 24rpx 8rpx;
+  background: white;
+  border-bottom: 1rpx solid #f0e8e0;
+}
+
+.score-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  display: block;
+}
+
+.score-meta {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 4rpx;
+  display: block;
+}
+
+.header-controls {
+  display: flex;
+  gap: 16rpx;
+}
+
+.ctrl-btn {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+}
+
+.ctrl-btn.active {
+  background: #fff3e0;
+  color: #8B4513;
+}
+
+/* 进度条 */
+.progress-section {
+  display: flex;
+  align-items: center;
+  padding: 4rpx 16rpx;
+  background: white;
+  gap: 8rpx;
+}
+
+.time-label {
+  font-size: 22rpx;
+  color: #aaa;
+  white-space: nowrap;
+  min-width: 60rpx;
+}
+
+.progress-slider {
+  flex: 1;
+}
+
+/* 播放控制 */
+.playback-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12rpx 24rpx;
+  background: white;
+  border-bottom: 1rpx solid #f0e8e0;
+  gap: 24rpx;
+}
+
+.stop-btn {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.play-btn {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  background: #8B4513;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 16rpx rgba(139, 69, 19, 0.3);
+  transition: all 0.2s;
+}
+
+.play-btn.playing {
+  background: #6d3410;
+}
+
+.play-icon {
+  font-size: 36rpx;
+  color: white;
+}
+
+.speed-selector {
+  display: flex;
+  gap: 8rpx;
+}
+
+.speed-btn {
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  color: #666;
+  background: #f0f0f0;
+}
+
+.speed-btn.active {
+  background: #8B4513;
+  color: white;
+  font-weight: bold;
+}
+
+/* 曲谱滚动区 */
+.score-scroll {
+  flex: 1;
+  overflow: hidden;
+}
+
+.score-body {
+  padding: 16rpx 16rpx 40rpx;
+}
+
+/* 段落标题 */
+.section-label {
+  font-size: 26rpx;
+  color: #8B4513;
+  font-weight: bold;
+  padding: 16rpx 8rpx 8rpx;
+  border-left: 6rpx solid #8B4513;
+  padding-left: 12rpx;
+  margin: 8rpx 0 4rpx;
+}
+
+/* 小节行 */
+.measure-row {
+  display: flex;
+  align-items: stretch;
+  min-height: 100rpx;
+  margin-bottom: 4rpx;
+  border-radius: 8rpx;
+  transition: background 0.2s;
+  padding: 4rpx 0;
+}
+
+.measure-row.active {
+  background: #fff3e0;
+  border: 2rpx solid #8B4513;
+  border-radius: 8rpx;
+}
+
+/* 小节号 */
+.measure-number {
+  width: 48rpx;
+  font-size: 20rpx;
+  color: #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.measure-row.active .measure-number {
+  color: #8B4513;
+  font-weight: bold;
+}
+
+/* 音符行 */
+.notes-row {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 0 4rpx;
+  min-height: 80rpx;
+}
+
+/* 音符格 */
+.note-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 2rpx;
+}
+
+/* 高低八度点 */
+.octave-dot {
+  font-size: 28rpx;
+  color: #333;
+  line-height: 1;
+  height: 20rpx;
+  display: flex;
+  align-items: center;
+}
+
+.octave-dot.top { margin-bottom: 2rpx; }
+.octave-dot.bottom { margin-top: 2rpx; }
+
+/* 音符数字 */
+.note-pitch {
+  font-size: 44rpx;
+  font-weight: bold;
+  color: #222;
+  line-height: 1;
+  font-family: serif;
+  position: relative;
+}
+
+.note-pitch.rest {
+  color: #ccc;
+}
+
+.dot-mark {
+  font-size: 36rpx;
+  position: absolute;
+  right: -12rpx;
+  top: -4rpx;
+}
+
+/* 八分音符下划线 */
+.duration-beam {
+  width: 80%;
+  height: 3rpx;
+  background: #333;
+  margin-top: 2rpx;
+  border-radius: 2rpx;
+}
+
+/* 指法标注 */
+.finger-mark {
+  font-size: 18rpx;
+  color: #8B4513;
+  margin-top: 4rpx;
+  opacity: 0.7;
+}
+
+/* 小节线 */
+.bar-line {
+  width: 3rpx;
+  background: #ccc;
+  margin: 4rpx 0;
+  flex-shrink: 0;
+}
+
+/* 结束双线 */
+.final-bar {
+  display: flex;
+  gap: 4rpx;
+  justify-content: center;
+  padding: 16rpx 0;
+}
+
+.final-bar-thin {
+  width: 3rpx;
+  height: 48rpx;
+  background: #333;
+}
+
+.final-bar-thick {
+  width: 8rpx;
+  height: 48rpx;
+  background: #333;
+}
+
+/* 无音频提示 */
+.no-audio-tip {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255,248,240,0.95);
+  padding: 20rpx 24rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-top: 1rpx solid #f0e8e0;
+}
+
+.tip-icon { font-size: 36rpx; }
+.tip-text { font-size: 26rpx; color: #666; margin-top: 4rpx; }
+.tip-hint { font-size: 22rpx; color: #aaa; text-align: center; margin-top: 4rpx; }

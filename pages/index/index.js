@@ -80,6 +80,13 @@ Page({
     });
   },
 
+  // 跳转到动态曲谱
+  goToScore() {
+    wx.navigateTo({
+      url: '/scorePackage/pages/score/score',
+    })
+  },
+
   // 跳转到曲谱库（后续开发）
   goToLibrary() {
     wx.showToast({

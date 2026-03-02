@@ -192,7 +192,7 @@ Page({
   analyzeTimer: null,
   // 录音帧缓冲
   audioContext: null,
-  sampleRate: 44100,
+  sampleRate: 16000,
   frameBuffer: [],
   innerAudioContext: null,
 
@@ -269,12 +269,11 @@ Page({
     this.setData({ isListening: true, stableCount: 0 })
     // 使用帧录音模式，每帧 100ms
     this.recorderManager.start({
-      duration: 600000,   // 最大10分钟
-      sampleRate: 44100,
+      duration: 600000,
+      sampleRate: 16000,
       numberOfChannels: 1,
-      encodingBitRate: 96000,
       format: 'PCM',
-      frameSize: 4,       // 每帧约 100ms (4KB @ 44100Hz mono 16bit ≈ ~23ms)
+      frameSize: 4,
     })
   },
 

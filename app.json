@@ -47,6 +47,15 @@
       }
     ]
   },
+  "subpackages": [
+    {
+      "root": "scorePackage",
+      "name": "score",
+      "pages": [
+        "pages/score/score"
+      ]
+    }
+  ],
   "requiredBackgroundModes": ["audio"],
   "lazyCodeLoading": "requiredComponents",
   "permission": {
