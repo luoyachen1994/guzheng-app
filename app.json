@@ -3,6 +3,7 @@
     "pages/index/index",
     "pages/practice/practice",
     "pages/metronome/metronome",
+    "pages/tuner/tuner",
     "pages/audio/audio",
     "pages/report/report",
     "pages/profile/profile"

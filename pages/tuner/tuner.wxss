@@ -1,0 +1,346 @@
+/* pages/tuner/tuner.wxss */
+.container {
+  padding: 20rpx;
+  background: #f5f5f5;
+  min-height: 100vh;
+  padding-bottom: 60rpx;
+}
+
+/* 顶部 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 24rpx;
+  background: white;
+  border-radius: 16rpx;
+  margin-bottom: 20rpx;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.key-selector {
+  display: flex;
+  gap: 12rpx;
+}
+
+.key-btn {
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 26rpx;
+  color: #666;
+  background: #f0f0f0;
+}
+
+.key-btn.active {
+  background: #8B4513;
+  color: white;
+  font-weight: bold;
+}
+
+/* 仪表盘卡片 */
+.meter-card {
+  background: white;
+  border-radius: 24rpx;
+  padding: 32rpx 24rpx 24rpx;
+  margin-bottom: 20rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 音名显示 */
+.note-display {
+  text-align: center;
+  margin-bottom: 20rpx;
+}
+
+.note-name {
+  font-size: 100rpx;
+  font-weight: bold;
+  color: #ccc;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.note-name.active {
+  color: #333;
+}
+
+.note-detail {
+  font-size: 26rpx;
+  color: #999;
+  margin-top: 8rpx;
+}
+
+/* 仪表盘 */
+.gauge-wrap {
+  position: relative;
+  width: 560rpx;
+  height: 300rpx;
+  margin: 10rpx 0 0;
+}
+
+.gauge-scale {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20rpx;
+}
+
+.scale-label {
+  font-size: 22rpx;
+  color: #aaa;
+}
+
+/* 彩色区间轨道（模拟半圆） */
+.gauge-track {
+  position: absolute;
+  bottom: 30rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 480rpx;
+  height: 12rpx;
+  border-radius: 6rpx;
+  display: flex;
+  overflow: hidden;
+}
+
+.gauge-zone {
+  flex: 1;
+  height: 100%;
+}
+
+.gauge-zone.low { background: #ff6b6b; }
+.gauge-zone.mid { background: #ffd166; }
+.gauge-zone.ok  { background: #06d6a0; transition: all 0.3s; }
+.gauge-zone.ok.pulsing { animation: pulse-ok 0.6s ease-in-out infinite alternate; }
+
+@keyframes pulse-ok {
+  from { background: #06d6a0; }
+  to   { background: #00b377; box-shadow: 0 0 8rpx #06d6a0; }
+}
+
+/* 指针 */
+.needle-pivot {
+  position: absolute;
+  bottom: 24rpx;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform: translateX(-50%);
+}
+
+.needle {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 4rpx;
+  height: 240rpx;
+  background: #555;
+  border-radius: 2rpx;
+  transform-origin: bottom center;
+  transform: translateX(-50%) rotate(0deg);
+  transition: transform 0.15s ease-out;
+}
+
+.needle.in-tune {
+  background: #06d6a0;
+}
+
+/* 中心圆 */
+.pivot-dot {
+  position: absolute;
+  bottom: 14rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20rpx;
+  height: 20rpx;
+  border-radius: 50%;
+  background: #888;
+  transition: background 0.3s;
+  z-index: 2;
+}
+
+.pivot-dot.tuned {
+  background: #06d6a0;
+  box-shadow: 0 0 12rpx #06d6a0;
+}
+
+/* Cents 数值 */
+.cents-display {
+  display: flex;
+  align-items: baseline;
+  gap: 8rpx;
+  margin-top: 24rpx;
+}
+
+.cents-value {
+  font-size: 64rpx;
+  font-weight: bold;
+  color: #ccc;
+  min-width: 120rpx;
+  text-align: center;
+  transition: color 0.2s;
+}
+
+.cents-value.ok    { color: #06d6a0; }
+.cents-value.sharp { color: #ff6b6b; }
+.cents-value.flat  { color: #4dabf7; }
+
+.cents-unit {
+  font-size: 26rpx;
+  color: #aaa;
+}
+
+/* 状态提示 */
+.tune-status {
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8rpx;
+}
+
+.tune-status.placeholder { visibility: hidden; }
+
+.status-ok {
+  padding: 6rpx 32rpx;
+  background: #06d6a0;
+  color: white;
+  border-radius: 20rpx;
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.status-sharp, .status-flat {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.status-sharp { color: #ff6b6b; }
+.status-flat  { color: #4dabf7; }
+
+/* 音量条 */
+.volume-bar-wrap {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-top: 20rpx;
+  padding: 0 8rpx;
+}
+
+.volume-label {
+  font-size: 24rpx;
+  color: #aaa;
+  white-space: nowrap;
+}
+
+.volume-track {
+  flex: 1;
+  height: 8rpx;
+  background: #eee;
+  border-radius: 4rpx;
+  overflow: hidden;
+}
+
+.volume-fill {
+  height: 100%;
+  background: linear-gradient(to right, #4dabf7, #06d6a0);
+  border-radius: 4rpx;
+  transition: width 0.1s;
+}
+
+/* 开始/停止按钮 */
+.listen-btn-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24rpx;
+}
+
+.listen-btn {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  padding: 22rpx 60rpx;
+  background: #8B4513;
+  color: white;
+  border-radius: 60rpx;
+  font-size: 32rpx;
+  box-shadow: 0 4rpx 16rpx rgba(139, 69, 19, 0.3);
+  transition: all 0.2s;
+}
+
+.listen-btn.listening {
+  background: #555;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.2);
+}
+
+.listen-icon {
+  font-size: 36rpx;
+}
+
+.listen-text {
+  font-weight: bold;
+}
+
+/* 21弦对照表 */
+.strings-section {
+  background: white;
+  border-radius: 16rpx;
+  padding: 24rpx;
+}
+
+.section-title {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+}
+
+.strings-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12rpx;
+}
+
+.string-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12rpx 4rpx;
+  background: #f8f8f8;
+  border-radius: 12rpx;
+  transition: all 0.2s;
+}
+
+.string-item.playing {
+  background: #fff3e0;
+  border: 2rpx solid #8B4513;
+}
+
+.string-number {
+  font-size: 20rpx;
+  color: #aaa;
+  line-height: 1;
+}
+
+.string-sol {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin: 4rpx 0;
+}
+
+.string-freq {
+  font-size: 18rpx;
+  color: #aaa;
+}

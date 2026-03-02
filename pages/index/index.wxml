@@ -40,13 +40,12 @@
       <text class="tool-title">节拍器</text>
     </view>
 
-    <!-- 调音器 (占位) -->
-    <view class="tool-card disabled">
+    <!-- 调音器 -->
+    <view class="tool-card" bindtap="goToTuner">
       <view class="tool-icon tuner-icon">
         <text class="icon-text">🎼</text>
       </view>
       <text class="tool-title">调音器</text>
-      <text class="coming-soon">即将上线</text>
     </view>
 
     <!-- 曲谱 (占位) -->

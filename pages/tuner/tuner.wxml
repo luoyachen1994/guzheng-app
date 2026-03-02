@@ -1,0 +1,112 @@
+<!--pages/tuner/tuner.wxml-->
+<view class="container">
+  <!-- 顶部标题 + 调式选择 -->
+  <view class="header">
+    <view class="title">调音器</view>
+    <view class="key-selector">
+      <view
+        class="key-btn {{currentKey === item ? 'active' : ''}}"
+        wx:for="{{keys}}"
+        wx:key="*this"
+        bindtap="selectKey"
+        data-key="{{item}}"
+      >{{item}}调</view>
+    </view>
+  </view>
+
+  <!-- 主调音仪表盘 -->
+  <view class="meter-card">
+    <!-- 音名显示 -->
+    <view class="note-display">
+      <view class="note-name {{hasSignal ? 'active' : ''}}">
+        {{matchedString ? matchedString.solmization : '--'}}
+      </view>
+      <view class="note-detail" wx:if="{{hasSignal}}">
+        {{matchedString.name}} · {{matchedString.note}} · {{detectedFreq}}Hz
+      </view>
+      <view class="note-detail" wx:else>
+        请弹奏古筝弦
+      </view>
+    </view>
+
+    <!-- 仪表盘指针 -->
+    <view class="gauge-wrap">
+      <!-- 刻度 -->
+      <view class="gauge-scale">
+        <text class="scale-label left">-50</text>
+        <text class="scale-label center">0</text>
+        <text class="scale-label right">+50</text>
+      </view>
+      <!-- 半圆轨道 -->
+      <view class="gauge-track">
+        <view class="gauge-zone low"></view>
+        <view class="gauge-zone mid"></view>
+        <view class="gauge-zone ok {{isInTune && stableCount >= 3 ? 'pulsing' : ''}}"></view>
+        <view class="gauge-zone mid"></view>
+        <view class="gauge-zone low"></view>
+      </view>
+      <!-- 指针 -->
+      <view class="needle-pivot">
+        <view
+          class="needle {{isInTune ? 'in-tune' : ''}}"
+          style="transform: rotate({{needleAngle}}deg);"
+        ></view>
+      </view>
+      <!-- 底部中心圆 -->
+      <view class="pivot-dot {{isInTune && stableCount >= 3 ? 'tuned' : ''}}"></view>
+    </view>
+
+    <!-- Cents 偏差数值 -->
+    <view class="cents-display">
+      <text class="cents-value {{isInTune ? 'ok' : (centsOff > 0 ? 'sharp' : 'flat')}}">
+        {{hasSignal ? (centsOff > 0 ? '+' : '') + centsOff : '—'}}
+      </text>
+      <text class="cents-unit">cents</text>
+    </view>
+
+    <!-- 调音状态提示 -->
+    <view class="tune-status" wx:if="{{hasSignal}}">
+      <view wx:if="{{isInTune && stableCount >= 3}}" class="status-ok">准确</view>
+      <view wx:elif="{{centsOff > 0}}" class="status-sharp">偏高 → 放松弦</view>
+      <view wx:else class="status-flat">偏低 → 拧紧弦</view>
+    </view>
+    <view class="tune-status placeholder" wx:else></view>
+
+    <!-- 音量指示条 -->
+    <view class="volume-bar-wrap">
+      <view class="volume-label">音量</view>
+      <view class="volume-track">
+        <view class="volume-fill" style="width: {{volume}}%"></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 开始/停止按钮 -->
+  <view class="listen-btn-wrap">
+    <view
+      class="listen-btn {{isListening ? 'listening' : ''}}"
+      bindtap="toggleListening"
+    >
+      <view class="listen-icon">{{isListening ? '⏹' : '🎙'}}</view>
+      <text class="listen-text">{{isListening ? '停止调音' : '开始调音'}}</text>
+    </view>
+  </view>
+
+  <!-- 21弦参考表 -->
+  <view class="strings-section">
+    <view class="section-title">{{currentKey}}调 · 21弦对照表</view>
+    <view class="strings-grid">
+      <view
+        class="string-item {{playingString === item.string ? 'playing' : ''}}"
+        wx:for="{{strings}}"
+        wx:key="string"
+        bindtap="playReference"
+        data-index="{{index}}"
+      >
+        <view class="string-number">{{item.string}}</view>
+        <view class="string-sol">{{item.solmization}}</view>
+        <view class="string-freq">{{item.freq}}Hz</view>
+      </view>
+    </view>
+  </view>
+</view>

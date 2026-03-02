@@ -73,6 +73,13 @@ Page({
     });
   },
 
+  // 跳转到调音器
+  goToTuner() {
+    wx.navigateTo({
+      url: '/pages/tuner/tuner',
+    });
+  },
+
   // 跳转到曲谱库（后续开发）
   goToLibrary() {
     wx.showToast({
