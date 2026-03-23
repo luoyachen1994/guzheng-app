@@ -201,7 +201,12 @@ Page({
   innerAudioContext: null,
 
   onLoad() {
-    this.setData({ strings: GUZHENG_STRINGS['D'] })
+    // 加载上次选择的调式
+    const lastKey = wx.getStorageSync('tuner_last_key') || 'D'
+    this.setData({
+      currentKey: lastKey,
+      strings: GUZHENG_STRINGS[lastKey]
+    })
     this.recorderManager = wx.getRecorderManager()
     this._setupRecorder()
   },
@@ -232,6 +237,8 @@ Page({
       needleAngle: 0,
       hasSignal: false,
     })
+    // 保存选择
+    wx.setStorageSync('tuner_last_key', key)
     if (wasListening) setTimeout(() => this._startListening(), 200)
   },
 
