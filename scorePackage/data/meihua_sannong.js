@@ -13,7 +13,7 @@ const MEIHUA_SANNONG = {
   bpm: 48,
   timeSignature: [4, 4],
   key: 'G',
-  audioSrc: '/scorePackage/audio/meihua_sannong.mp3',
+  audioSrc: 'http://47.96.88.249:8000/static/audio/meihua_sannong.mp3',
   sections: [
     {
       name: '引子',

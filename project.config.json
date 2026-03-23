@@ -1,7 +1,14 @@
 {
   "description": "古筝学习助手 - 智能识别与指导",
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      { "type": "folder", "value": "server" },
+      { "type": "folder", "value": "docs" },
+      { "type": "folder", "value": ".superpowers" },
+      { "type": "folder", "value": ".claude" },
+      { "type": "folder", "value": "scorePackage/audio" },
+      { "type": "folder", "value": "scorePackage/score-images" }
+    ],
     "include": []
   },
   "setting": {

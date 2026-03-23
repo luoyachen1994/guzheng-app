@@ -10,6 +10,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from services.video_processor import extract_audio, extract_frames, get_video_duration
 from services.audio_analyzer import analyze_audio
@@ -34,6 +35,11 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="古筝练习助手 API", version="1.0.0", lifespan=lifespan)
+
+# 静态文件服务 - 曲谱音频和图片
+STATIC_DIR = os.path.join(os.path.dirname(__file__), "static")
+os.makedirs(STATIC_DIR, exist_ok=True)
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 # CORS 配置 - 允许小程序访问
 app.add_middleware(
