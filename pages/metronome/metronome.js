@@ -404,6 +404,13 @@ Page({
         })
         // 删除旧数据
         wx.removeStorageSync('metronome_prefs')
+
+        // 显示迁移提示（仅在迁移时显示一次）
+        wx.showToast({
+          title: '已迁移并恢复设置',
+          icon: 'none',
+          duration: 2000
+        })
       }
 
       // 加载配置
@@ -420,13 +427,6 @@ Page({
         this.metronome.setTimeSignature(this.data.timeSignature[0], this.data.timeSignature[1])
         this.initBeatBlocks()
         this.updatePendulumStyle()
-
-        // 显示恢复提示
-        wx.showToast({
-          title: '已恢复上次设置',
-          icon: 'none',
-          duration: 2000
-        })
       }
     } catch (e) {
       console.error('加载配置失败', e)
