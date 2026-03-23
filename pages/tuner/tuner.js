@@ -184,6 +184,10 @@ Page({
     // 稳定性：连续多帧在范围内才判定为准
     stableCount: 0,
     STABLE_REQUIRED: 3,
+
+    // 触觉反馈
+    lastVibrationTime: 0,
+    vibrationCooldown: 300,
   },
 
   // 录音管理器
@@ -338,6 +342,15 @@ Page({
       stableCount = Math.min(stableCount + 1, this.data.STABLE_REQUIRED + 2)
     } else {
       stableCount = 0
+    }
+
+    // 触觉反馈：调准时震动
+    if (isInTune && stableCount === this.data.STABLE_REQUIRED) {
+      const now = Date.now()
+      if (now - this.data.lastVibrationTime > this.data.vibrationCooldown) {
+        wx.vibrateShort({ type: 'medium' })
+        this.setData({ lastVibrationTime: now })
+      }
     }
 
     this.setData({
