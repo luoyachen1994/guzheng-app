@@ -160,8 +160,8 @@ Page({
     // 初始化音频合成器
     this.initAudioSynthesizer()
 
-    // 加载用户偏好
-    this.loadPreferences()
+    // 加载用户配置
+    this.loadConfig()
 
     // 初始化视觉元素
     this.initBeatBlocks()
@@ -258,7 +258,7 @@ Page({
     this.setData({ bpm })
     this.metronome.setBPM(bpm)
     this.updatePendulumStyle()
-    this.savePreferences()
+    this.saveConfig()
   },
 
   // ===== 节拍类型 =====
@@ -268,7 +268,7 @@ Page({
     this.setData({ timeSignature })
     this.metronome.setTimeSignature(timeSignature[0], timeSignature[1])
     this.initBeatBlocks()
-    this.savePreferences()
+    this.saveConfig()
   },
 
   // ===== 音效切换 =====
@@ -283,7 +283,7 @@ Page({
     // 播放预览音
     this.playBeat(true)
 
-    this.savePreferences()
+    this.saveConfig()
   },
 
   toggleVibration() {
@@ -296,14 +296,14 @@ Page({
       wx.vibrateShort({ type: 'medium' })
     }
 
-    this.savePreferences()
+    this.saveConfig()
   },
 
   // ===== 视觉模式 =====
   toggleVisualMode() {
     const visualMode = this.data.visualMode === 'blocks' ? 'pendulum' : 'blocks'
     this.setData({ visualMode })
-    this.savePreferences()
+    this.saveConfig()
   },
 
   initBeatBlocks() {
@@ -388,38 +388,63 @@ Page({
   },
 
   // ===== 数据持久化 =====
-  loadPreferences() {
+  loadConfig() {
     try {
-      const prefs = wx.getStorageSync('metronome_prefs')
-      if (prefs) {
+      // 一次性迁移：检查旧的 metronome_prefs 数据
+      const oldPrefs = wx.getStorageSync('metronome_prefs')
+      if (oldPrefs) {
+        // 迁移到新的存储键
+        wx.setStorageSync('metronome_config', {
+          bpm: oldPrefs.bpm || 96,
+          timeSignature: oldPrefs.timeSignature || [4, 4],
+          soundType: oldPrefs.soundType || 'wooden',
+          visualMode: oldPrefs.visualMode || 'blocks',
+          vibrationEnabled: oldPrefs.vibrationEnabled !== undefined ? oldPrefs.vibrationEnabled : true,
+          timestamp: Date.now()
+        })
+        // 删除旧数据
+        wx.removeStorageSync('metronome_prefs')
+      }
+
+      // 加载配置
+      const config = wx.getStorageSync('metronome_config')
+      if (config) {
         this.setData({
-          bpm: prefs.bpm || 96,
-          timeSignature: prefs.timeSignature || [4, 4],
-          soundType: prefs.soundType || 'wooden',
-          visualMode: prefs.visualMode || 'blocks',
-          vibrationEnabled: prefs.vibrationEnabled !== undefined ? prefs.vibrationEnabled : true
+          bpm: config.bpm || 96,
+          timeSignature: config.timeSignature || [4, 4],
+          soundType: config.soundType || 'wooden',
+          visualMode: config.visualMode || 'blocks',
+          vibrationEnabled: config.vibrationEnabled !== undefined ? config.vibrationEnabled : true
         })
         this.metronome.setBPM(this.data.bpm)
         this.metronome.setTimeSignature(this.data.timeSignature[0], this.data.timeSignature[1])
         this.initBeatBlocks()
         this.updatePendulumStyle()
+
+        // 显示恢复提示
+        wx.showToast({
+          title: '已恢复上次设置',
+          icon: 'none',
+          duration: 2000
+        })
       }
     } catch (e) {
-      console.error('加载偏好设置失败', e)
+      console.error('加载配置失败', e)
     }
   },
 
-  savePreferences() {
+  saveConfig() {
     try {
-      wx.setStorageSync('metronome_prefs', {
+      wx.setStorageSync('metronome_config', {
         bpm: this.data.bpm,
         timeSignature: this.data.timeSignature,
         soundType: this.data.soundType,
         visualMode: this.data.visualMode,
-        vibrationEnabled: this.data.vibrationEnabled
+        vibrationEnabled: this.data.vibrationEnabled,
+        timestamp: Date.now()
       })
     } catch (e) {
-      console.error('保存偏好设置失败', e)
+      console.error('保存配置失败', e)
     }
   }
 })
