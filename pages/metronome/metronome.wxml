@@ -31,6 +31,7 @@
           wx:for="{{musicPresets}}"
           wx:key="term"
           bindtap="selectPreset"
+          bindlongpress="setDefaultPreset"
           data-bpm="{{item.bpm}}">
           <view class="preset-name">{{item.name}}</view>
           <view class="preset-bpm">{{item.bpm}}</view>
@@ -42,6 +43,7 @@
           wx:for="{{practicePresets}}"
           wx:key="name"
           bindtap="selectPreset"
+          bindlongpress="setDefaultPreset"
           data-bpm="{{item.bpm}}">
           <view class="preset-name">{{item.name}}</view>
           <view class="preset-bpm">{{item.bpm}}</view>
@@ -119,7 +121,7 @@
 
   <!-- 播放控制按钮 -->
   <view class="play-control">
-    <button class="play-btn {{isPlaying ? 'playing' : ''}}" bindtap="togglePlay">
+    <button class="play-btn {{isPlaying ? 'playing' : ''}}" bindtap="togglePlay" bindlongpress="resetMetronome">
       <text class="play-text">{{isPlaying ? '⏸' : '▶'}}</text>
     </button>
   </view>

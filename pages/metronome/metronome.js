@@ -144,14 +144,19 @@ Page({
   audioSynthesizer: null,
 
   onLoad() {
+    // 加载默认速度
+    const defaultBpm = wx.getStorageSync('default_bpm') || 96
+
     // 初始化节拍器
     this.metronome = new Metronome({
-      bpm: this.data.bpm,
+      bpm: defaultBpm,
       timeSignature: this.data.timeSignature,
       onBeat: (beatNumber, isStrong) => {
         this.onMetronomeBeat(beatNumber, isStrong)
       }
     })
+
+    this.setData({ bpm: defaultBpm })
 
     // 初始化音频上下文
     this.audioCtx = wx.createInnerAudioContext()
@@ -232,6 +237,17 @@ Page({
 
     // 播放预览音
     this.playBeat(true)
+  },
+
+  setDefaultPreset(e) {
+    const bpm = parseInt(e.currentTarget.dataset.bpm)
+    wx.setStorageSync('default_bpm', bpm)
+    wx.showToast({
+      title: `已设为默认速度: ${bpm}`,
+      icon: 'success',
+      duration: 1500
+    })
+    wx.vibrateShort({ type: 'medium' })
   },
 
   // ===== 速度控制 =====
@@ -350,6 +366,18 @@ Page({
 
     // 重置视觉指示器
     this.initBeatBlocks()
+  },
+
+  resetMetronome() {
+    const defaultBpm = wx.getStorageSync('default_bpm') || 96
+    this.setBPM(defaultBpm)
+    this.stopMetronome()
+    wx.showToast({
+      title: '已重置到默认速度',
+      icon: 'success',
+      duration: 1500
+    })
+    wx.vibrateShort({ type: 'heavy' })
   },
 
   // ===== 节拍回调 =====
