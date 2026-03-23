@@ -3,8 +3,13 @@
   <!-- 顶部栏 -->
   <view class="header">
     <view class="title">节拍器</view>
-    <view class="sound-switch" bindtap="toggleSoundType">
-      <text class="sound-text">{{soundType === 'wooden' ? '木' : soundType === 'guzheng' ? '筝' : '电'}}</text>
+    <view class="header-controls">
+      <view class="vibration-switch" bindtap="toggleVibration">
+        <text class="icon">{{vibrationEnabled ? '📳' : '🔕'}}</text>
+      </view>
+      <view class="sound-switch" bindtap="toggleSoundType">
+        <text class="sound-text">{{soundType === 'wooden' ? '木' : soundType === 'guzheng' ? '筝' : '电'}}</text>
+      </view>
     </view>
   </view>
 

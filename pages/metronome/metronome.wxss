@@ -22,6 +22,31 @@
   color: #333;
 }
 
+.header-controls {
+  display: flex;
+  gap: 12rpx;
+}
+
+.vibration-switch {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f0f0;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.vibration-switch:active {
+  transform: scale(0.92);
+  background: #e0e0e0;
+}
+
+.vibration-switch .icon {
+  font-size: 28rpx;
+}
+
 .sound-switch {
   width: 60rpx;
   height: 60rpx;

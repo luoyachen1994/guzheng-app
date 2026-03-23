@@ -89,6 +89,9 @@ Page({
     // 速度相关
     bpm: 96,
 
+    // 震动开关
+    vibrationEnabled: true,
+
     // 预设相关
     presetTab: 'music',
     musicPresets: [
@@ -283,6 +286,19 @@ Page({
     this.savePreferences()
   },
 
+  toggleVibration() {
+    this.setData({
+      vibrationEnabled: !this.data.vibrationEnabled
+    })
+
+    // 测试震动反馈
+    if (this.data.vibrationEnabled) {
+      wx.vibrateShort({ type: 'medium' })
+    }
+
+    this.savePreferences()
+  },
+
   // ===== 视觉模式 =====
   toggleVisualMode() {
     const visualMode = this.data.visualMode === 'blocks' ? 'pendulum' : 'blocks'
@@ -341,6 +357,13 @@ Page({
     // 播放音效
     this.playBeat(isStrong)
 
+    // 触觉反馈
+    if (this.data.vibrationEnabled) {
+      wx.vibrateShort({
+        type: isStrong ? 'heavy' : 'light'
+      })
+    }
+
     // 更新视觉指示器
     if (this.data.visualMode === 'blocks') {
       this.updateBeatBlocks(beatNumber, isStrong)
@@ -373,7 +396,8 @@ Page({
           bpm: prefs.bpm || 96,
           timeSignature: prefs.timeSignature || [4, 4],
           soundType: prefs.soundType || 'wooden',
-          visualMode: prefs.visualMode || 'blocks'
+          visualMode: prefs.visualMode || 'blocks',
+          vibrationEnabled: prefs.vibrationEnabled !== undefined ? prefs.vibrationEnabled : true
         })
         this.metronome.setBPM(this.data.bpm)
         this.metronome.setTimeSignature(this.data.timeSignature[0], this.data.timeSignature[1])
@@ -391,7 +415,8 @@ Page({
         bpm: this.data.bpm,
         timeSignature: this.data.timeSignature,
         soundType: this.data.soundType,
-        visualMode: this.data.visualMode
+        visualMode: this.data.visualMode,
+        vibrationEnabled: this.data.vibrationEnabled
       })
     } catch (e) {
       console.error('保存偏好设置失败', e)
