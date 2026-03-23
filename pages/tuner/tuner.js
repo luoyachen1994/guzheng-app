@@ -147,6 +147,34 @@ function calcRMS(buffer) {
   return Math.sqrt(sum / buffer.length)
 }
 
+// 中位数滤波器（提高精度）
+class MedianFilter {
+  constructor(size = 5) {
+    this.size = size
+    this.buffer = []
+  }
+
+  push(value) {
+    this.buffer.push(value)
+    if (this.buffer.length > this.size) {
+      this.buffer.shift()
+    }
+  }
+
+  get() {
+    if (this.buffer.length === 0) return null
+    const sorted = [...this.buffer].sort((a, b) => a - b)
+    const mid = Math.floor(sorted.length / 2)
+    return sorted.length % 2 === 0
+      ? (sorted[mid - 1] + sorted[mid]) / 2
+      : sorted[mid]
+  }
+
+  clear() {
+    this.buffer = []
+  }
+}
+
 Page({
   data: {
     // 调式选择
@@ -179,7 +207,7 @@ Page({
     volume: 0,
 
     // 准确区间（cents）
-    tunedThreshold: 8,
+    tunedThreshold: 2,
 
     // 稳定性：连续多帧在范围内才判定为准
     stableCount: 0,
@@ -199,6 +227,9 @@ Page({
   sampleRate: 16000,
   frameBuffer: [],
   innerAudioContext: null,
+  // 中位数滤波器
+  freqFilter: new MedianFilter(5),
+  centsFilter: new MedianFilter(5),
 
   onLoad() {
     // 加载上次选择的调式
@@ -291,6 +322,8 @@ Page({
   _stopListening() {
     this.setData({ isListening: false, hasSignal: false, stableCount: 0 })
     try { this.recorderManager.stop() } catch (e) {}
+    this.freqFilter.clear()
+    this.centsFilter.clear()
     this.setData({
       detectedNote: '--',
       centsOff: 0,
@@ -325,9 +358,14 @@ Page({
       return
     }
 
+    // 应用中位数滤波
+    this.freqFilter.push(freq)
+    const filteredFreq = this.freqFilter.get()
+    if (!filteredFreq) return
+
     // 找最近的弦
     const strings = GUZHENG_STRINGS[this.data.currentKey]
-    const matched = findNearestString(freq, strings)
+    const matched = findNearestString(filteredFreq, strings)
     if (!matched) return
 
     // 超出 ±50 cents 就不算有效信号
@@ -336,12 +374,16 @@ Page({
       return
     }
 
+    // 对 cents 偏差也进行滤波
+    this.centsFilter.push(matched.centsOff)
+    const filteredCents = this.centsFilter.get()
+
     // 计算指针角度（±50 cents 对应 ±90°）
-    const clampedCents = Math.max(-50, Math.min(50, matched.centsOff))
+    const clampedCents = Math.max(-50, Math.min(50, filteredCents))
     const angle = clampedCents * 1.8  // 50cents = 90°
 
     // 判断是否准
-    const isInTune = Math.abs(matched.centsOff) <= this.data.tunedThreshold
+    const isInTune = Math.abs(filteredCents) <= this.data.tunedThreshold
 
     // 稳定性计数
     let stableCount = this.data.stableCount
@@ -362,9 +404,9 @@ Page({
 
     this.setData({
       hasSignal: true,
-      detectedFreq: Math.round(freq * 10) / 10,
+      detectedFreq: Math.round(filteredFreq * 10) / 10,
       detectedNote: matched.note,
-      centsOff: Math.round(matched.centsOff),
+      centsOff: Math.round(filteredCents * 10) / 10,
       needleAngle: angle,
       matchedString: matched,
       isInTune,

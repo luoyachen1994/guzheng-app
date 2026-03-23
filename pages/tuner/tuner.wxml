@@ -59,7 +59,7 @@
     <!-- Cents 偏差数值 -->
     <view class="cents-display">
       <text class="cents-value {{isInTune ? 'ok' : (centsOff > 0 ? 'sharp' : 'flat')}}">
-        {{hasSignal ? (centsOff > 0 ? '+' : '') + centsOff : '—'}}
+        {{hasSignal ? (centsOff > 0 ? '+' : '') + centsOff.toFixed(1) : '—'}}
       </text>
       <text class="cents-unit">cents</text>
     </view>
