@@ -34,7 +34,9 @@
       <!-- 刻度 -->
       <view class="gauge-scale">
         <text class="scale-label left">-50</text>
+        <text class="scale-label mid-left">-25</text>
         <text class="scale-label center">0</text>
+        <text class="scale-label mid-right">+25</text>
         <text class="scale-label right">+50</text>
       </view>
       <!-- 半圆轨道 -->

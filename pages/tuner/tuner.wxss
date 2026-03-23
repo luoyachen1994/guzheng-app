@@ -100,6 +100,14 @@
   color: #aaa;
 }
 
+.scale-label.mid-left {
+  margin-left: 80rpx;
+}
+
+.scale-label.mid-right {
+  margin-right: 80rpx;
+}
+
 /* 彩色区间轨道（模拟半圆） */
 .gauge-track {
   position: absolute;
@@ -118,14 +126,14 @@
   height: 100%;
 }
 
-.gauge-zone.low { background: #ff6b6b; }
-.gauge-zone.mid { background: #ffd166; }
-.gauge-zone.ok  { background: #06d6a0; transition: all 0.3s; }
+.gauge-zone.low { background: #ff8787; }
+.gauge-zone.mid { background: #ffe066; }
+.gauge-zone.ok  { background: #51cf66; transition: all 0.3s; }
 .gauge-zone.ok.pulsing { animation: pulse-ok 0.6s ease-in-out infinite alternate; }
 
 @keyframes pulse-ok {
-  from { background: #06d6a0; }
-  to   { background: #00b377; box-shadow: 0 0 8rpx #06d6a0; }
+  from { background: #51cf66; }
+  to   { background: #37b24d; box-shadow: 0 0 8rpx #51cf66; }
 }
 
 /* 指针 */
@@ -149,10 +157,12 @@
   transform-origin: bottom center;
   transform: translateX(-50%) rotate(0deg);
   transition: transform 0.15s ease-out;
+  filter: drop-shadow(0 2rpx 4rpx rgba(0, 0, 0, 0.3));
 }
 
 .needle.in-tune {
-  background: #06d6a0;
+  background: #51cf66;
+  filter: drop-shadow(0 2rpx 6rpx rgba(81, 207, 102, 0.5));
 }
 
 /* 中心圆 */
@@ -170,8 +180,8 @@
 }
 
 .pivot-dot.tuned {
-  background: #06d6a0;
-  box-shadow: 0 0 12rpx #06d6a0;
+  background: #51cf66;
+  box-shadow: 0 0 12rpx #51cf66;
 }
 
 /* Cents 数值 */
@@ -189,11 +199,12 @@
   min-width: 120rpx;
   text-align: center;
   transition: color 0.2s;
+  font-family: 'Courier New', Courier, monospace;
 }
 
-.cents-value.ok    { color: #06d6a0; }
-.cents-value.sharp { color: #ff6b6b; }
-.cents-value.flat  { color: #4dabf7; }
+.cents-value.ok    { color: #51cf66; }
+.cents-value.sharp { color: #ff8787; }
+.cents-value.flat  { color: #74c0fc; }
 
 .cents-unit {
   font-size: 26rpx;
@@ -213,7 +224,7 @@
 
 .status-ok {
   padding: 6rpx 32rpx;
-  background: #06d6a0;
+  background: #51cf66;
   color: white;
   border-radius: 20rpx;
   font-size: 28rpx;
@@ -225,8 +236,8 @@
   color: #666;
 }
 
-.status-sharp { color: #ff6b6b; }
-.status-flat  { color: #4dabf7; }
+.status-sharp { color: #ff8787; }
+.status-flat  { color: #74c0fc; }
 
 /* 音量条 */
 .volume-bar-wrap {
@@ -254,7 +265,7 @@
 
 .volume-fill {
   height: 100%;
-  background: linear-gradient(to right, #4dabf7, #06d6a0);
+  background: linear-gradient(to right, #74c0fc, #51cf66);
   border-radius: 4rpx;
   transition: width 0.1s;
 }
