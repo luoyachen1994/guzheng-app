@@ -102,7 +102,7 @@
         class="string-item {{playingString === item.string ? 'playing' : ''}}"
         wx:for="{{strings}}"
         wx:key="string"
-        bindtap="playReference"
+        bindtap="handleStringTap"
         data-index="{{index}}"
       >
         <view class="string-number">{{item.string}}</view>

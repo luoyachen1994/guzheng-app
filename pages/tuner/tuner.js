@@ -216,6 +216,11 @@ Page({
     // 触觉反馈
     lastVibrationTime: 0,
     vibrationCooldown: 300,
+
+    // 双击快捷操作
+    lastTapTime: 0,
+    lastTapIndex: -1,
+    doubleTapDelay: 300,
   },
 
   // 录音管理器
@@ -441,5 +446,40 @@ Page({
     setTimeout(() => {
       this.setData({ playingString: null })
     }, 2000)
+  },
+
+  // 双击弦项 → 开启自动调音（仅监听该弦）
+  handleStringTap(e) {
+    const now = Date.now()
+    const idx = e.currentTarget.dataset.index
+
+    if (
+      idx === this.data.lastTapIndex &&
+      now - this.data.lastTapTime < this.data.doubleTapDelay
+    ) {
+      // 双击：开始自动调音并锁定该弦
+      const string = this.data.strings[idx]
+      this.setData({
+        matchedString: string,
+        lastTapTime: 0,
+        lastTapIndex: -1,
+      })
+      if (!this.data.isListening) {
+        this._startListening()
+      }
+      wx.showToast({
+        title: `锁定 ${string.name} · ${string.note}`,
+        icon: 'success',
+        duration: 1500,
+      })
+      wx.vibrateShort({ type: 'medium' })
+    } else {
+      // 单击：播放参考音
+      this.setData({
+        lastTapTime: now,
+        lastTapIndex: idx,
+      })
+      this.playReference(e)
+    }
   },
 })
